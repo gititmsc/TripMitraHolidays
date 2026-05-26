@@ -36,7 +36,7 @@ html, body.login-body {
 }
 
 .login-logo-wrap img {
-    max-width: 240px;
+    /*max-width: 240px;*/
     width: 100%;
     height: auto;
 }
