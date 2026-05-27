@@ -1,0 +1,314 @@
+@model TripMitraHolidays.Core.Models.Package
+@{
+    ViewBag.Title = "Package Details";
+    ViewBag.PageTitle = "Package Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+        <h1>@Model.PackageName</h1>
+        <p>@Model.Destination@(!string.IsNullOrEmpty(Model.Country) ? ", " + Model.Country : "")</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="@Url.Action("Edit", new { id = Model.PackageId })" class="btn-primary-admin">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right:5px;vertical-align:-1px;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            Edit Package
+        </a>
+        <a href="@Url.Action("Index")" class="btn-secondary-admin">&larr; All Packages</a>
+    </div>
+</div>
+
+@* Banner image *@
+@if (!string.IsNullOrEmpty(Model.BannerImage))
+{
+    <div class="admin-card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+        <img src="@Model.BannerImage" alt="@Model.PackageName Banner"
+             style="width:100%;max-height:320px;object-fit:cover;display:block;" />
+    </div>
+}
+
+<div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;" class="details-grid">
+
+    @* ─── MAIN COLUMN ─────────────────────────────────────────── *@
+    <div>
+
+        @* Overview card *@
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h2 class="admin-card-title">Package Overview</h2>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    @if (Model.IsFeatured) { <span class="pkg-tag gold">Featured</span> }
+                    @if (Model.IsPopular)  { <span class="pkg-tag purple">Popular</span> }
+                    @if (Model.IsFlightIncluded) { <span class="pkg-tag blue">Flight</span> }
+                    @if (Model.IsVisaIncluded)   { <span class="pkg-tag teal">Visa</span> }
+                    <span class="badge-status @(Model.IsActive ? "active" : "inactive")">@(Model.IsActive ? "Active" : "Inactive")</span>
+                </div>
+            </div>
+            <div class="admin-card-body">
+                <div class="detail-grid-4">
+                    <div class="detail-item">
+                        <span class="detail-label">Destination</span>
+                        <span class="detail-value">@(Model.Destination ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Country</span>
+                        <span class="detail-value">@(Model.Country ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Starting City</span>
+                        <span class="detail-value">@(Model.StartingCity ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration</span>
+                        <span class="detail-value">@Model.DurationDays Days / @Model.DurationNights Nights</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Package Type</span>
+                        <span class="detail-value">@(Model.PackageType ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tour Category</span>
+                        <span class="detail-value">@(Model.TourCategory ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Hotel Rating</span>
+                        <span class="detail-value">@(Model.HotelRating ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Meal Type</span>
+                        <span class="detail-value">@(Model.MealType ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Transportation</span>
+                        <span class="detail-value">@(Model.Transportation ?? "—")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Actual Price</span>
+                        <span class="detail-value" style="font-weight:700;color:var(--navy);">&#x20B9;@Model.PackagePrice.ToString("N0")</span>
+                    </div>
+                    @if (Model.DiscountPrice.HasValue)
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Discount Price</span>
+                            <span class="detail-value" style="font-weight:700;color:#059669;">&#x20B9;@Model.DiscountPrice.Value.ToString("N0")</span>
+                        </div>
+                    }
+                    <div class="detail-item">
+                        <span class="detail-label">Display Order</span>
+                        <span class="detail-value">@Model.DisplayOrder</span>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.ShortDescription))
+                {
+                    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f6;">
+                        <span class="detail-label">Short Description</span>
+                        <p style="margin:8px 0 0;color:#374151;font-size:.88rem;line-height:1.6;">@Model.ShortDescription</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* Full description *@
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">Full Description</h2>
+                </div>
+                <div class="admin-card-body">
+                    <div class="rich-content">@Html.Raw(Model.Description)</div>
+                </div>
+            </div>
+        }
+
+        @* Itinerary *@
+        @if (Model.Itineraries != null && Model.Itineraries.Any())
+        {
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">Itinerary</h2>
+                    <span style="font-size:.8rem;color:#9ca3af;">@Model.Itineraries.Count day(s)</span>
+                </div>
+                <div class="admin-card-body" style="padding:0;">
+                    @foreach (var day in Model.Itineraries.OrderBy(i => i.DayNumber))
+                    {
+                        <div class="itin-detail-row">
+                            <div class="itin-day-badge">Day @day.DayNumber</div>
+                            <div class="itin-day-content">
+                                <div class="itin-day-title">@day.Title</div>
+                                @if (!string.IsNullOrEmpty(day.Description))
+                                {
+                                    <div class="itin-day-desc">@day.Description</div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @* Inclusions & Exclusions *@
+        @if ((Model.Inclusions != null && Model.Inclusions.Any()) || (Model.Exclusions != null && Model.Exclusions.Any()))
+        {
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">Inclusions & Exclusions</h2>
+                </div>
+                <div class="admin-card-body">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                        <div>
+                            <h4 style="font-size:.85rem;font-weight:700;color:#059669;margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px;">
+                                ✓ Inclusions
+                            </h4>
+                            @if (Model.Inclusions != null && Model.Inclusions.Any())
+                            {
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    @foreach (var inc in Model.Inclusions)
+                                    {
+                                        <li style="padding:5px 0;font-size:.875rem;color:#374151;display:flex;align-items:flex-start;gap:8px;border-bottom:1px dashed #f0f0f6;">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="#059669" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z"/></svg>
+                                            @inc.Item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else { <p style="color:#9ca3af;font-size:.85rem;">No inclusions added.</p> }
+                        </div>
+                        <div>
+                            <h4 style="font-size:.85rem;font-weight:700;color:#dc2626;margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px;">
+                                ✗ Exclusions
+                            </h4>
+                            @if (Model.Exclusions != null && Model.Exclusions.Any())
+                            {
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    @foreach (var exc in Model.Exclusions)
+                                    {
+                                        <li style="padding:5px 0;font-size:.875rem;color:#374151;display:flex;align-items:flex-start;gap:8px;border-bottom:1px dashed #f0f0f6;">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="#dc2626" style="flex-shrink:0;margin-top:2px;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                            @exc.Item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else { <p style="color:#9ca3af;font-size:.85rem;">No exclusions added.</p> }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* Gallery *@
+        @if (Model.Images != null && Model.Images.Any())
+        {
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">Gallery</h2>
+                    <span style="font-size:.8rem;color:#9ca3af;">@Model.Images.Count image(s)</span>
+                </div>
+                <div class="admin-card-body">
+                    <div class="gallery-existing-grid">
+                        @foreach (var img in Model.Images.OrderBy(i => i.DisplayOrder))
+                        {
+                            <div class="gallery-existing-item" style="cursor:default;">
+                                <img src="@img.ImagePath" alt="Gallery image" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    @* ─── SIDE COLUMN ──────────────────────────────────────────── *@
+    <div>
+
+        @* Thumbnail *@
+        @if (!string.IsNullOrEmpty(Model.ThumbnailImage))
+        {
+            <div class="admin-card" style="padding:0;overflow:hidden;margin-bottom:16px;">
+                <img src="@Model.ThumbnailImage" alt="Thumbnail"
+                     style="width:100%;display:block;max-height:200px;object-fit:cover;" />
+            </div>
+        }
+
+        @* Quick info *@
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h2 class="admin-card-title">Quick Info</h2>
+            </div>
+            <div class="admin-card-body" style="padding:14px 18px;">
+                <table style="width:100%;font-size:.83rem;border-collapse:collapse;">
+                    <tr><td style="padding:6px 0;color:#9ca3af;">ID</td><td style="padding:6px 0;font-weight:600;">#@Model.PackageId</td></tr>
+                    <tr><td style="padding:6px 0;color:#9ca3af;">Slug</td><td style="padding:6px 0;font-family:monospace;font-size:.78rem;word-break:break-all;">@Model.Slug</td></tr>
+                    <tr><td style="padding:6px 0;color:#9ca3af;">Created</td><td style="padding:6px 0;">@Model.CreatedDate.ToString("dd MMM yyyy")</td></tr>
+                    @if (Model.UpdatedDate.HasValue)
+                    {
+                        <tr><td style="padding:6px 0;color:#9ca3af;">Updated</td><td style="padding:6px 0;">@Model.UpdatedDate.Value.ToString("dd MMM yyyy")</td></tr>
+                    }
+                    <tr><td style="padding:6px 0;color:#9ca3af;">Status</td>
+                        <td style="padding:6px 0;"><span class="badge-status @(Model.IsActive ? "active" : "inactive")">@(Model.IsActive ? "Active" : "Inactive")</span></td></tr>
+                </table>
+            </div>
+        </div>
+
+        @* SEO *@
+        @if (!string.IsNullOrEmpty(Model.MetaTitle) || !string.IsNullOrEmpty(Model.MetaDescription))
+        {
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">SEO</h2>
+                </div>
+                <div class="admin-card-body" style="padding:14px 18px;">
+                    @if (!string.IsNullOrEmpty(Model.MetaTitle))
+                    {
+                        <div style="margin-bottom:10px;">
+                            <div style="font-size:.73rem;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Meta Title</div>
+                            <div style="font-size:.85rem;color:#374151;">@Model.MetaTitle</div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.MetaKeywords))
+                    {
+                        <div style="margin-bottom:10px;">
+                            <div style="font-size:.73rem;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Keywords</div>
+                            <div style="font-size:.82rem;color:#374151;">@Model.MetaKeywords</div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.MetaDescription))
+                    {
+                        <div>
+                            <div style="font-size:.73rem;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Meta Description</div>
+                            <div style="font-size:.83rem;color:#374151;line-height:1.5;">@Model.MetaDescription</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @* Actions *@
+        <div class="admin-card">
+            <div class="admin-card-body" style="padding:14px 18px;display:flex;flex-direction:column;gap:8px;">
+                <a href="@Url.Action("Edit", new { id = Model.PackageId })" class="btn-primary-admin" style="justify-content:center;">
+                    Edit Package
+                </a>
+                @using (Html.BeginForm("Delete", "Packages", new { id = Model.PackageId }, FormMethod.Post, new { onsubmit = "return confirm('Delete this package? This cannot be undone.');" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" style="width:100%;padding:9px;border:1.5px solid #dc2626;border-radius:8px;background:transparent;color:#dc2626;font-size:.85rem;font-weight:600;cursor:pointer;">
+                        Delete Package
+                    </button>
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@*@section scripts {
+<style>
+    @media(max-width:900px) { .details-grid { grid-template-columns: 1fr !important; } }
+</style>
+}*@
