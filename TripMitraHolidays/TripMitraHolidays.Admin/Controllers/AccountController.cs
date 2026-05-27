@@ -20,7 +20,7 @@ namespace TripMitraHolidays.Admin.Controllers
         public ActionResult Login()
         {
             if (Request.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             return View();
         }
 
@@ -43,7 +43,7 @@ namespace TripMitraHolidays.Admin.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]
