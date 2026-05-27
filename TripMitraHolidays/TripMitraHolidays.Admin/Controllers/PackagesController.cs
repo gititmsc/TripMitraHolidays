@@ -25,11 +25,35 @@ namespace TripMitraHolidays.Admin.Controllers
         }
 
         // GET: /Packages
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(
+            string search = "", string status = "all",
+            string sort = "displayorder", string dir = "asc",
+            int page = 1, int pageSize = 10)
         {
             ViewBag.PageTitle = "Packages";
-            var packages = await _service.GetAllAsync();
-            return View(packages);
+
+            var allowedSizes = new[] { 10, 25, 50, 100 };
+            if (Array.IndexOf(allowedSizes, pageSize) < 0) pageSize = 10;
+            if (page < 1) page = 1;
+
+            bool? isActive = status == "active" ? true : status == "inactive" ? (bool?)false : null;
+            bool descending = string.Equals(dir, "desc", StringComparison.OrdinalIgnoreCase);
+
+            var result = await _service.GetPagedAsync(search, isActive, sort, descending, page, pageSize);
+
+            var vm = new PackageListViewModel
+            {
+                Packages     = result.Item1,
+                TotalCount   = result.Item2,
+                Page         = page,
+                PageSize     = pageSize,
+                SortColumn   = sort,
+                SortDir      = dir,
+                Search       = search ?? "",
+                StatusFilter = status ?? "all"
+            };
+
+            return View(vm);
         }
 
         // GET: /Packages/Create

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace TripMitraHolidays.BAL.Packages
         }
 
         public Task<List<Package>> GetAllAsync() => _repo.GetAllAsync();
+
+        public Task<Tuple<List<Package>, int>> GetPagedAsync(string search, bool? isActive, string sortColumn, bool descending, int page, int pageSize)
+            => _repo.GetPagedAsync(search, isActive, sortColumn, descending, page, pageSize);
 
         public Task<Package> GetByIdAsync(int id) => _repo.GetByIdAsync(id);
 

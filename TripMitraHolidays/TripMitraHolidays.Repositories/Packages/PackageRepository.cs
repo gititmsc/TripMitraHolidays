@@ -21,6 +21,65 @@ namespace TripMitraHolidays.Repositories.Packages
             }
         }
 
+        public async Task<Tuple<List<Package>, int>> GetPagedAsync(
+            string search, bool? isActive, string sortColumn, bool descending, int page, int pageSize)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                IQueryable<Package> query = db.Packages;
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    string s = search.ToLower();
+                    query = query.Where(p =>
+                        p.PackageName.ToLower().Contains(s) ||
+                        (p.Destination != null && p.Destination.ToLower().Contains(s)) ||
+                        (p.Country != null && p.Country.ToLower().Contains(s)));
+                }
+
+                if (isActive.HasValue)
+                    query = query.Where(p => p.IsActive == isActive.Value);
+
+                int total = await query.CountAsync();
+
+                IQueryable<Package> sorted;
+                switch ((sortColumn ?? "displayorder").ToLower())
+                {
+                    case "packagename":
+                        sorted = descending ? query.OrderByDescending(p => p.PackageName) : query.OrderBy(p => p.PackageName);
+                        break;
+                    case "destination":
+                        sorted = descending ? query.OrderByDescending(p => p.Destination) : query.OrderBy(p => p.Destination);
+                        break;
+                    case "packageprice":
+                        sorted = descending ? query.OrderByDescending(p => p.PackagePrice) : query.OrderBy(p => p.PackagePrice);
+                        break;
+                    case "durationdays":
+                        sorted = descending ? query.OrderByDescending(p => p.DurationDays) : query.OrderBy(p => p.DurationDays);
+                        break;
+                    case "isactive":
+                        sorted = descending ? query.OrderByDescending(p => p.IsActive) : query.OrderBy(p => p.IsActive);
+                        break;
+                    case "createddate":
+                        sorted = descending ? query.OrderByDescending(p => p.CreatedDate) : query.OrderBy(p => p.CreatedDate);
+                        break;
+                    default:
+                        sorted = descending
+                            ? query.OrderByDescending(p => p.DisplayOrder).ThenByDescending(p => p.CreatedDate)
+                            : query.OrderBy(p => p.DisplayOrder).ThenByDescending(p => p.CreatedDate);
+                        break;
+                }
+
+                var items = await sorted
+                    .Include(p => p.Images)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return Tuple.Create(items, total);
+            }
+        }
+
         public async Task<Package> GetByIdAsync(int id)
         {
             using (var db = new ApplicationDbContext())
