@@ -1,9 +1,45 @@
-﻿@{
-    ViewBag.Title = "About";
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.MetaTitle       = ViewBag.MetaTitle ?? "About Us | TripMitra Holidays";
+    ViewBag.MetaDescription = ViewBag.MetaDescription ?? "Learn about TripMitra Holidays – your trusted travel partner for crafting unforgettable journeys since 2018.";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
-</main>
+<section class="section" style="min-height:60vh;">
+    <div class="section-header">
+        <div>
+            <div class="eyebrow">Our Story</div>
+            <h2 class="section-h2">About <span>TripMitra</span> Holidays</h2>
+        </div>
+    </div>
+
+    <div style="max-width:780px;font-size:14px;color:#444;line-height:1.9;">
+        <p style="margin-bottom:16px;">
+            <strong>TripMitra Holidays</strong> was founded with a single purpose —
+            to make extraordinary travel accessible to every Indian family.
+            Since 2018 we have crafted more than 10,000 memorable journeys,
+            spanning everything from Kerala backwater escapes to grand European tours.
+        </p>
+        <p style="margin-bottom:16px;">
+            We believe the best holiday is one where you arrive knowing every
+            detail has been handled. Our team of experienced travel consultants
+            designs each package with a local's insider knowledge and a
+            traveller's eye for experiences that money can't easily replicate.
+        </p>
+        <p style="margin-bottom:32px;">
+            Whether it's your first international trip or a milestone anniversary
+            honeymoon, <strong>TripMitra</strong> is your companion from the first
+            enquiry to the final farewell.
+        </p>
+
+        <a href="@Url.Action("Index","Home")#enquire" class="btn-cta-fill" style="display:inline-block;">
+            ✈ Plan Your Holiday
+        </a>
+    </div>
+</section>
+
+<div class="trust-strip" style="padding-top:0;">
+    <div class="trust-item"><div class="trust-icon">✈️</div><div class="trust-num">500+</div><div class="trust-lbl">Destinations</div></div>
+    <div class="trust-item"><div class="trust-icon">😊</div><div class="trust-num">10,000+</div><div class="trust-lbl">Happy Travellers</div></div>
+    <div class="trust-item"><div class="trust-icon">⭐</div><div class="trust-num">4.9 / 5</div><div class="trust-lbl">Average Rating</div></div>
+    <div class="trust-item"><div class="trust-icon">🏆</div><div class="trust-num">15+</div><div class="trust-lbl">Years Experience</div></div>
+</div>

@@ -1,0 +1,37 @@
+@model TripMitraHolidays.Core.ViewModels.PackageCardViewModel
+@{
+    string imgSrc   = string.IsNullOrEmpty(Model.ThumbnailImage)
+                        ? "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80&fit=crop"
+                        : Model.ThumbnailImage;
+    string detailUrl = Url.RouteUrl("PackageDetail", new { slug = Model.Slug });
+}
+
+<a href="@detailUrl" class="pkg-card" data-cat="@Model.DataCategories">
+    <div class="pkg-card-img">
+        <img src="@imgSrc"
+             alt="@Model.PackageName"
+             loading="lazy"
+             width="600" height="170" />
+        @if (!string.IsNullOrEmpty(Model.BadgeText))
+        {
+            <div class="pkg-badge">@Model.BadgeText</div>
+        }
+    </div>
+    <div class="pkg-body">
+        <div class="pkg-dest">@Model.PackageName</div>
+        <div class="pkg-rating">
+            ★★★★★
+            @if (!string.IsNullOrEmpty(Model.Destination))
+            {
+                <span>@Model.Destination@(!string.IsNullOrEmpty(Model.Country) ? ", " + Model.Country : "")</span>
+            }
+        </div>
+        <div class="pkg-footer">
+            <div class="pkg-nights">@Model.DurationNights Nights / @Model.DurationDays Days</div>
+            <div class="pkg-price">
+                ₹@Model.DisplayPrice.ToString("N0")
+                <small>per person</small>
+            </div>
+        </div>
+    </div>
+</a>

@@ -17,5 +17,10 @@ namespace TripMitraHolidays.Repositories.Packages
         Task AddImagesAsync(IEnumerable<PackageImage> images);
         Task DeleteImageAsync(int imageId);
         Task<bool> SlugExistsAsync(string slug, int excludeId = 0);
+
+        // Public website queries (IsActive = true only)
+        Task<Package> GetBySlugAsync(string slug);
+        Task<Tuple<List<Package>, int>> GetPublicPagedAsync(string search, string tourCategory, string packageType, int page, int pageSize);
+        Task<List<Package>> GetFeaturedForHomeAsync(int maxCount);
     }
 }

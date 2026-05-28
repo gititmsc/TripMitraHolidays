@@ -232,5 +232,76 @@ namespace TripMitraHolidays.Repositories.Packages
                     .AnyAsync(p => p.Slug == slug && p.PackageId != excludeId);
             }
         }
+
+        public async Task<Package> GetBySlugAsync(string slug)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await db.Packages
+                    .Include(p => p.Images)
+                    .Include(p => p.Itineraries)
+                    .Include(p => p.Inclusions)
+                    .Include(p => p.Exclusions)
+                    .FirstOrDefaultAsync(p => p.Slug == slug && p.IsActive);
+            }
+        }
+
+        public async Task<Tuple<List<Package>, int>> GetPublicPagedAsync(
+            string search, string tourCategory, string packageType, int page, int pageSize)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                IQueryable<Package> query = db.Packages.Where(p => p.IsActive);
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    string s = search.ToLower();
+                    query = query.Where(p =>
+                        p.PackageName.ToLower().Contains(s) ||
+                        (p.Destination != null && p.Destination.ToLower().Contains(s)) ||
+                        (p.Country != null && p.Country.ToLower().Contains(s)));
+                }
+
+                if (!string.IsNullOrWhiteSpace(tourCategory))
+                    query = query.Where(p =>
+                        p.TourCategory != null &&
+                        p.TourCategory.ToLower().Contains(tourCategory.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(packageType))
+                    query = query.Where(p =>
+                        p.PackageType != null &&
+                        p.PackageType.ToLower().Contains(packageType.ToLower()));
+
+                int total = await query.CountAsync();
+
+                var items = await query
+                    .Include(p => p.Images)
+                    .OrderBy(p => p.DisplayOrder)
+                    .ThenByDescending(p => p.IsFeatured)
+                    .ThenByDescending(p => p.IsPopular)
+                    .ThenByDescending(p => p.CreatedDate)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return Tuple.Create(items, total);
+            }
+        }
+
+        public async Task<List<Package>> GetFeaturedForHomeAsync(int maxCount)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                return await db.Packages
+                    .Where(p => p.IsActive)
+                    .Include(p => p.Images)
+                    .OrderBy(p => p.DisplayOrder)
+                    .ThenByDescending(p => p.IsFeatured)
+                    .ThenByDescending(p => p.IsPopular)
+                    .ThenByDescending(p => p.CreatedDate)
+                    .Take(maxCount)
+                    .ToListAsync();
+            }
+        }
     }
 }

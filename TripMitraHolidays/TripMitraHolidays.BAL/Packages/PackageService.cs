@@ -59,5 +59,14 @@ namespace TripMitraHolidays.BAL.Packages
             slug = Regex.Replace(slug, @"\-+", "-");
             return slug.Trim('-');
         }
+
+        public Task<Package> GetBySlugAsync(string slug) => _repo.GetBySlugAsync(slug);
+
+        public Task<Tuple<List<Package>, int>> GetPublicPackagesAsync(
+            string search, string tourCategory, string packageType, int page, int pageSize)
+            => _repo.GetPublicPagedAsync(search, tourCategory, packageType, page, pageSize);
+
+        public Task<List<Package>> GetFeaturedForHomeAsync(int maxCount)
+            => _repo.GetFeaturedForHomeAsync(maxCount);
     }
 }

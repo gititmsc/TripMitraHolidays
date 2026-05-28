@@ -18,5 +18,10 @@ namespace TripMitraHolidays.BAL.Packages
         Task DeleteGalleryImageAsync(int imageId);
         Task<string> MakeUniqueSlugAsync(string slug, int excludeId = 0);
         string GenerateSlug(string name);
+
+        // Public website methods (IsActive = true only)
+        Task<Package> GetBySlugAsync(string slug);
+        Task<Tuple<List<Package>, int>> GetPublicPackagesAsync(string search, string tourCategory, string packageType, int page, int pageSize);
+        Task<List<Package>> GetFeaturedForHomeAsync(int maxCount);
     }
 }

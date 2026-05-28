@@ -1,33 +1,248 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@model TripMitraHolidays.Core.ViewModels.HomeViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.MetaTitle       = Model.MetaTitle;
+    ViewBag.MetaDescription = Model.MetaDescription;
+    ViewBag.OgImage         = Model.OgImage;
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+@* ════════════════════════════════════════════════
+   HERO SLIDER
+   ════════════════════════════════════════════════ *@
+@if (Model.SliderPackages.Any())
+{
+    <div class="slider-section" id="heroSlider">
+        <div class="slider-track" id="sliderTrack">
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+            @for (int i = 0; i < Model.SliderPackages.Count; i++)
+            {
+                var slide = Model.SliderPackages[i];
+                string imgSrc = string.IsNullOrEmpty(slide.ThumbnailImage)
+                    ? "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80&fit=crop&crop=center"
+                    : slide.ThumbnailImage;
+
+                string tagText = (!string.IsNullOrEmpty(slide.PackageType) ? slide.PackageType : "Holiday")
+                               + (!string.IsNullOrEmpty(slide.TourCategory) ? " · " + slide.TourCategory : "");
+
+                <div class="slide @(i == 0 ? "active" : "")">
+                    @if (i == 0)
+                    {
+                        <img src="@imgSrc" alt="@slide.PackageName" loading="eager" />
+                    }
+                    else
+                    {
+                        <img src="@imgSrc" alt="@slide.PackageName" loading="lazy" />
+                    }
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-tag">✦ @tagText</div>
+                        <h1 class="slide-h1">
+                            @slide.PackageName
+                        </h1>
+                        @if (!string.IsNullOrEmpty(slide.ShortDescription))
+                        {
+                            <p class="slide-desc">@slide.ShortDescription</p>
+                        }
+                        <div class="slide-price-tag">
+                            <span class="slide-price-from">Starting from</span>
+                            <span class="slide-price-amt">₹@slide.DisplayPrice.ToString("N0")</span>
+                            <span class="slide-price-pp">per person</span>
+                        </div>
+                        <div class="slide-btns">
+                            <a href="@Url.RouteUrl("PackageDetail", new { slug = slide.Slug })" class="slide-btn-gold">🗺 View Package</a>
+                            <a href="#enquire" class="slide-btn-ghost">📩 Get Free Quote</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>@* /slider-track *@
+
+        <div class="slide-stats">
+            <div class="stat-bubble"><div class="stat-bubble-num">500+</div><div class="stat-bubble-lbl">Destinations</div></div>
+            <div class="stat-bubble"><div class="stat-bubble-num">10K+</div><div class="stat-bubble-lbl">Happy Clients</div></div>
+            <div class="stat-bubble"><div class="stat-bubble-num">15+</div><div class="stat-bubble-lbl">Years Expertise</div></div>
+        </div>
+
+        <div class="slider-arrow prev" id="prevBtn" onclick="changeSlide(-1)" aria-label="Previous slide">&#8249;</div>
+        <div class="slider-arrow next" id="nextBtn" onclick="changeSlide(1)"  aria-label="Next slide">&#8250;</div>
+        <div class="slider-dots" id="sliderDots"></div>
+        <div class="slider-progress" id="sliderProgress"></div>
     </div>
-</main>
+}
+else
+{
+    <div class="slider-section">
+        <div class="slider-empty">
+            <h2>🌍 Discover the World with TripMitra</h2>
+            <p>Exciting packages coming soon. <a href="#enquire" style="color:#c9a227;">Enquire now</a> for custom itineraries.</p>
+        </div>
+    </div>
+}
+
+@* ════════════════════════════════════════════════
+   PACKAGES SECTION
+   ════════════════════════════════════════════════ *@
+<section class="section" id="packages">
+    <div class="section-header">
+        <div>
+            <div class="eyebrow">Handpicked For You</div>
+            <h2 class="section-h2">Top <span>Holiday</span> Packages</h2>
+        </div>
+        <a href="@Url.Action("Index","Packages")" class="view-all">View All Packages →</a>
+    </div>
+
+    <div class="filter-tabs">
+        <div class="tab active"           onclick="filterTab(this,'all')">All</div>
+        <div class="tab" onclick="filterTab(this,'international')">International</div>
+        <div class="tab" onclick="filterTab(this,'domestic')">Domestic India</div>
+        <div class="tab" onclick="filterTab(this,'honeymoon')">Honeymoon</div>
+        <div class="tab" onclick="filterTab(this,'adventure')">Adventure</div>
+        <div class="tab" onclick="filterTab(this,'family')">Family</div>
+    </div>
+
+    <div class="packages-grid" id="packagesGrid">
+        @if (Model.FeaturedPackages.Any())
+        {
+            foreach (var pkg in Model.FeaturedPackages)
+            {
+                @Html.Partial("_PackageCard", pkg)
+            }
+        }
+        else
+        {
+            <div class="packages-empty">
+                <div style="font-size:48px;">🏖️</div>
+                <p>Holiday packages are being added. Check back soon or <a href="#enquire">enquire now</a>.</p>
+            </div>
+        }
+    </div>
+</section>
+
+@* ════════════════════════════════════════════════
+   CTA BANNER
+   ════════════════════════════════════════════════ *@
+<div class="cta-banner" id="enquire">
+    <div class="cta-text">
+        <h3>🗺 Can't find your dream destination?</h3>
+        <p>
+            Tell us where you want to go — our travel experts will craft a custom itinerary
+            just for you, completely free. No obligation, just great travel planning.
+        </p>
+    </div>
+    <div class="cta-btns">
+        <a href="tel:+919724895328" class="btn-cta-outline">📞 Call Us</a>
+        <a href="mailto:booking@tripmitraholidays.com" class="btn-cta-fill">✉ Send Enquiry</a>
+    </div>
+</div>
+
+@* ════════════════════════════════════════════════
+   TRUST STRIP
+   ════════════════════════════════════════════════ *@
+<div class="trust-strip">
+    <div class="trust-item">
+        <div class="trust-icon">✈️</div>
+        <div class="trust-num">500+</div>
+        <div class="trust-lbl">Destinations Covered</div>
+    </div>
+    <div class="trust-item">
+        <div class="trust-icon">😊</div>
+        <div class="trust-num">10,000+</div>
+        <div class="trust-lbl">Happy Travellers</div>
+    </div>
+    <div class="trust-item">
+        <div class="trust-icon">⭐</div>
+        <div class="trust-num">4.9 / 5</div>
+        <div class="trust-lbl">Average Rating</div>
+    </div>
+    <div class="trust-item">
+        <div class="trust-icon">🏆</div>
+        <div class="trust-num">15+</div>
+        <div class="trust-lbl">Years of Experience</div>
+    </div>
+</div>
+
+@* ════════════════════════════════════════════════
+   POPULAR DESTINATIONS
+   ════════════════════════════════════════════════ *@
+@if (Model.PopularDestinations.Any())
+{
+    <section class="section" id="destinations">
+        <div class="section-header">
+            <div>
+                <div class="eyebrow">Explore By Place</div>
+                <h2 class="section-h2">Popular <span>Destinations</span></h2>
+            </div>
+            <a href="@Url.Action("Index","Packages")" class="view-all">All Destinations →</a>
+        </div>
+    </section>
+    <div class="dest-row">
+        @foreach (var dest in Model.PopularDestinations)
+        {
+            string destImg = string.IsNullOrEmpty(dest.ImageUrl)
+                ? "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&q=80&fit=crop"
+                : dest.ImageUrl;
+            <a href="@Url.Action("Index","Packages")?category=@dest.Slug" class="dest-tile">
+                <img src="@destImg" alt="@dest.Name" loading="lazy" width="400" height="533" />
+                <div class="dest-tile-name">@dest.Name</div>
+                <div class="dest-tile-count">@dest.PackageCount package@(dest.PackageCount != 1 ? "s" : "")</div>
+            </a>
+        }
+    </div>
+}
+
+@* ════════════════════════════════════════════════
+   TESTIMONIALS (static, no DB table yet)
+   ════════════════════════════════════════════════ *@
+<div class="testimonials">
+    <div class="section-header">
+        <div>
+            <div class="eyebrow">What Travellers Say</div>
+            <h2 class="section-h2">Real <span>Reviews</span>, Real Smiles</h2>
+        </div>
+    </div>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+                "TripMitra planned our Bali honeymoon perfectly — every detail was thought through.
+                The resorts they recommended were stunning and the price was unbeatable!"
+            </p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">PR</div>
+                <div>
+                    <div class="testimonial-name">Priya &amp; Rahul</div>
+                    <div class="testimonial-trip">Bali Honeymoon, Oct 2024</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+                "Our family Kerala trip was absolutely amazing. The houseboat experience on the
+                backwaters was something our kids will never forget. Highly recommend!"
+            </p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">SK</div>
+                <div>
+                    <div class="testimonial-name">Suresh Kumar</div>
+                    <div class="testimonial-trip">Kerala Family Tour, Dec 2024</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+                "The Europe tour was beyond our expectations. 5 countries in 11 days, seamless
+                logistics, great hotels. TripMitra's team was supportive throughout the journey."
+            </p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">AM</div>
+                <div>
+                    <div class="testimonial-name">Anita Mehta</div>
+                    <div class="testimonial-trip">Europe Dream Tour, Nov 2024</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

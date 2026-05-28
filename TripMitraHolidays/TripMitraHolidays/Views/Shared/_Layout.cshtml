@@ -1,39 +1,75 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    @* ── SEO: Title ── *@
+    <title>@(ViewBag.MetaTitle ?? "TripMitra Holidays – Explore More, Worry Less")</title>
+
+    @* ── SEO: Meta tags ── *@
+    @if (!string.IsNullOrEmpty(ViewBag.MetaDescription as string))
+    {
+        <meta name="description" content="@ViewBag.MetaDescription" />
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.MetaKeywords as string))
+    {
+        <meta name="keywords" content="@ViewBag.MetaKeywords" />
+    }
+
+    @* ── SEO: Canonical ── *@
+    @if (!string.IsNullOrEmpty(ViewBag.CanonicalUrl as string))
+    {
+        <link rel="canonical" href="@ViewBag.CanonicalUrl" />
+    }
+
+    @* ── OpenGraph tags ── *@
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TripMitra Holidays" />
+    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "TripMitra Holidays – Explore More, Worry Less")" />
+    @if (!string.IsNullOrEmpty(ViewBag.MetaDescription as string))
+    {
+        <meta property="og:description" content="@ViewBag.MetaDescription" />
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.OgImage as string))
+    {
+        <meta property="og:image" content="@ViewBag.OgImage" />
+    }
+
+    @* ── Twitter Card ── *@
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "TripMitra Holidays")" />
+    @if (!string.IsNullOrEmpty(ViewBag.MetaDescription as string))
+    {
+        <meta name="twitter:description" content="@ViewBag.MetaDescription" />
+    }
+
+    @* ── Google Fonts ── *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    @* ── TripMitra CSS ── *@
+    @Styles.Render("~/Content/tripmitra")
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+<div class="page-wrap">
+
+    @Html.Partial("_Topbar")
+    @Html.Partial("_Navbar")
+
+    @RenderBody()
+
+    @Html.Partial("_Footer")
+
+</div>@* /page-wrap *@
+
+@Html.Partial("_WhatsApp")
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/tripmitra")
+@RenderSection("scripts", required: false)
+
 </body>
 </html>
