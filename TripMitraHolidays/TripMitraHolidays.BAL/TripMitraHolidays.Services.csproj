@@ -44,12 +44,16 @@
     
     <Reference Include="System.Net.Http"/>
     
+    <Reference Include="System.Configuration"/>
+    <Reference Include="System.Web"/>
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\IAuthService.cs" />
     <Compile Include="Auth\AuthService.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Email\IEmailService.cs" />
+    <Compile Include="Email\EmailService.cs" />
     <Compile Include="Inquiries\IInquiryService.cs" />
     <Compile Include="Inquiries\InquiryService.cs" />
     <Compile Include="Packages\IPackageService.cs" />

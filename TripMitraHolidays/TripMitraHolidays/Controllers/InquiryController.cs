@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TripMitraHolidays.BAL.Email;
 using TripMitraHolidays.BAL.Inquiries;
 using TripMitraHolidays.Core.Models;
 using TripMitraHolidays.Core.ViewModels;
@@ -11,10 +12,12 @@ namespace TripMitraHolidays.Controllers
     public class InquiryController : Controller
     {
         private readonly IInquiryService _service;
+        private readonly IEmailService   _emailService;
 
         public InquiryController()
         {
-            _service = new InquiryService(new InquiryRepository());
+            _service      = new InquiryService(new InquiryRepository());
+            _emailService = new EmailService();
         }
 
         // GET: /enquire  or  /contact
@@ -57,10 +60,15 @@ namespace TripMitraHolidays.Controllers
                 CreatedDate          = DateTime.UtcNow
             };
 
+            // Save to database first — never block on email failure
             await _service.SubmitAsync(inquiry);
 
-            TempData["SuccessMessage"] = "Thank you for your inquiry, " + inquiry.FullName.Split(' ')[0] +
-                "! Our travel expert will contact you shortly.";
+            // Send emails asynchronously; exceptions are swallowed inside EmailService
+            _ = _emailService.SendInquiryEmailsAsync(inquiry);
+
+            string firstName = inquiry.FullName.Split(' ')[0];
+            TempData["SuccessMessage"] = $"Thank you, {firstName}! Your enquiry has been received. " +
+                "We've sent a confirmation to your email and our travel expert will contact you within 24 hours.";
 
             return RedirectToAction("Index");
         }
