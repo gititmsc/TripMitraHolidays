@@ -14,22 +14,32 @@
              width="600" height="170" />
         @if (!string.IsNullOrEmpty(Model.BadgeText))
         {
-            <div class="pkg-badge">@Model.BadgeText</div>
+            <div class="pkg-badge">
+                @if (Model.IsFeatured)
+                {
+                    <i class="fa-solid fa-fire"></i>
+                }
+                else if (Model.IsPopular)
+                {
+                    <i class="fa-solid fa-crown"></i>
+                }
+                @Model.BadgeText
+            </div>
         }
     </div>
     <div class="pkg-body">
         <div class="pkg-dest">@Model.PackageName</div>
         <div class="pkg-rating">
-            ★★★★★
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
             @if (!string.IsNullOrEmpty(Model.Destination))
             {
                 <span>@Model.Destination@(!string.IsNullOrEmpty(Model.Country) ? ", " + Model.Country : "")</span>
             }
         </div>
         <div class="pkg-footer">
-            <div class="pkg-nights">@Model.DurationNights Nights / @Model.DurationDays Days</div>
+            <div class="pkg-nights">@Model.DurationNights N / @Model.DurationDays D</div>
             <div class="pkg-price">
-                ₹@Model.DisplayPrice.ToString("N0")
+                &#8377;@Model.DisplayPrice.ToString("N0")
                 <small>per person</small>
             </div>
         </div>

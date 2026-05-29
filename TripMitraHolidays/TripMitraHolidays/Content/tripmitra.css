@@ -414,7 +414,7 @@ body {
     transition: transform .2s, box-shadow .2s;
 }
 .trust-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(13,27,75,.08); }
-.trust-icon { font-size: 30px; margin-bottom: 10px; }
+.trust-icon { font-size: 28px; margin-bottom: 10px; color: #c9a227; }
 .trust-num { font-size: 24px; font-weight: 800; color: #0d1b4b; margin-bottom: 4px; }
 .trust-lbl { font-size: 11px; color: #888; }
 
@@ -517,8 +517,9 @@ body {
 .pkg-inclusions-list li, .pkg-exclusions-list li {
     font-size: 13px; color: #444; display: flex; align-items: flex-start; gap: 8px;
 }
-.pkg-inclusions-list li::before { content: '✓'; color: #22c55e; font-weight: 700; flex-shrink: 0; }
-.pkg-exclusions-list li::before { content: '✕'; color: #ef4444; font-weight: 700; flex-shrink: 0; }
+/* icons now rendered via <i class="fa-solid fa-check/fa-xmark"> tags in the view */
+.pkg-inclusions-list li { gap: 8px; }
+.pkg-exclusions-list li { gap: 8px; }
 .itinerary-item { border: 1px solid #eef0f8; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
 .itinerary-header {
     background: #f4f6ff; padding: 12px 16px;

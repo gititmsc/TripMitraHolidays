@@ -27,8 +27,8 @@ namespace TripMitraHolidays.Core.ViewModels
         {
             get
             {
-                if (IsFeatured) return "🔥 Bestseller";
-                if (IsPopular) return "👑 Popular";
+                if (IsFeatured) return "Bestseller";
+                if (IsPopular) return "Popular";
                 return null;
             }
         }

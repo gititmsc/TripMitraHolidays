@@ -8,19 +8,16 @@
 
 <nav class="navbar">
     <a href="@Url.Action("Index","Home")" class="logo">
-        @*<div class="logo-globe">🌍</div>
-        <div class="logo-text">
-            <div class="logo-name">Trip<span>Mitra</span></div>
-            <div class="logo-sub">Holidays</div>
-        </div>*@
-        <img src="~/Content/images/logo.png" alt="Trip Mitra Holidays" class="sidebar-logo" />
+        <img src="~/Content/images/logo.png" alt="TripMitra Holidays" class="sidebar-logo" />
     </a>
 
     <div class="nav-links">
-        <a href="@Url.Action("Index","Home")"    class="nav-link @(isHome     ? "active" : "")">Home</a>
+        <a href="@Url.Action("Index","Home")"     class="nav-link @(isHome     ? "active" : "")">Home</a>
         <a href="@Url.Action("Index","Packages")" class="nav-link @(isPackages ? "active" : "")">Packages</a>
-        <a href="@Url.Action("About","Home")"    class="nav-link @(isAbout    ? "active" : "")">About</a>
-        <a href="@Url.Action("Index","Home")#enquire" class="nav-enquire">✈ Enquire Now</a>
+        <a href="@Url.Action("About","Home")"     class="nav-link @(isAbout    ? "active" : "")">About</a>
+        <a href="@Url.Action("Index","Home")#enquire" class="nav-enquire">
+            <i class="fa-solid fa-plane"></i> Enquire Now
+        </a>
     </div>
 
     <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
@@ -29,8 +26,10 @@
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
-    <a href="@Url.Action("Index","Home")"    class="nav-link @(isHome     ? "active" : "")" onclick="closeMenu()">Home</a>
+    <a href="@Url.Action("Index","Home")"     class="nav-link @(isHome     ? "active" : "")" onclick="closeMenu()">Home</a>
     <a href="@Url.Action("Index","Packages")" class="nav-link @(isPackages ? "active" : "")" onclick="closeMenu()">Packages</a>
-    <a href="@Url.Action("About","Home")"    class="nav-link @(isAbout    ? "active" : "")" onclick="closeMenu()">About</a>
-    <a href="@Url.Action("Index","Home")#enquire" class="nav-enquire" onclick="closeMenu()">✈ Enquire Now</a>
+    <a href="@Url.Action("About","Home")"     class="nav-link @(isAbout    ? "active" : "")" onclick="closeMenu()">About</a>
+    <a href="@Url.Action("Index","Home")#enquire" class="nav-enquire" onclick="closeMenu()">
+        <i class="fa-solid fa-plane"></i> Enquire Now
+    </a>
 </div>

@@ -22,7 +22,7 @@
                     : slide.ThumbnailImage;
 
                 string tagText = (!string.IsNullOrEmpty(slide.PackageType) ? slide.PackageType : "Holiday")
-                               + (!string.IsNullOrEmpty(slide.TourCategory) ? " · " + slide.TourCategory : "");
+                               + (!string.IsNullOrEmpty(slide.TourCategory) ? " &middot; " + slide.TourCategory : "");
 
                 <div class="slide @(i == 0 ? "active" : "")">
                     @if (i == 0)
@@ -35,22 +35,26 @@
                     }
                     <div class="slide-overlay"></div>
                     <div class="slide-content">
-                        <div class="slide-tag">✦ @tagText</div>
-                        <h1 class="slide-h1">
-                            @slide.PackageName
-                        </h1>
+                        <div class="slide-tag">
+                            <i class="fa-solid fa-circle-dot"></i> @Html.Raw(tagText)
+                        </div>
+                        <h1 class="slide-h1">@slide.PackageName</h1>
                         @if (!string.IsNullOrEmpty(slide.ShortDescription))
                         {
                             <p class="slide-desc">@slide.ShortDescription</p>
                         }
                         <div class="slide-price-tag">
                             <span class="slide-price-from">Starting from</span>
-                            <span class="slide-price-amt">₹@slide.DisplayPrice.ToString("N0")</span>
+                            <span class="slide-price-amt">&#8377;@slide.DisplayPrice.ToString("N0")</span>
                             <span class="slide-price-pp">per person</span>
                         </div>
                         <div class="slide-btns">
-                            <a href="@Url.RouteUrl("PackageDetail", new { slug = slide.Slug })" class="slide-btn-gold">🗺 View Package</a>
-                            <a href="#enquire" class="slide-btn-ghost">📩 Get Free Quote</a>
+                            <a href="@Url.RouteUrl("PackageDetail", new { slug = slide.Slug })" class="slide-btn-gold">
+                                <i class="fa-solid fa-compass"></i> View Package
+                            </a>
+                            <a href="#enquire" class="slide-btn-ghost">
+                                <i class="fa-solid fa-paper-plane"></i> Get Free Quote
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -74,7 +78,7 @@ else
 {
     <div class="slider-section">
         <div class="slider-empty">
-            <h2>🌍 Discover the World with TripMitra</h2>
+            <h2><i class="fa-solid fa-earth-americas"></i> Discover the World with TripMitra</h2>
             <p>Exciting packages coming soon. <a href="#enquire" style="color:#c9a227;">Enquire now</a> for custom itineraries.</p>
         </div>
     </div>
@@ -89,11 +93,13 @@ else
             <div class="eyebrow">Handpicked For You</div>
             <h2 class="section-h2">Top <span>Holiday</span> Packages</h2>
         </div>
-        <a href="@Url.Action("Index","Packages")" class="view-all">View All Packages →</a>
+        <a href="@Url.Action("Index","Packages")" class="view-all">
+            View All Packages <i class="fa-solid fa-arrow-right"></i>
+        </a>
     </div>
 
     <div class="filter-tabs">
-        <div class="tab active"           onclick="filterTab(this,'all')">All</div>
+        <div class="tab active"                      onclick="filterTab(this,'all')">All</div>
         <div class="tab" onclick="filterTab(this,'international')">International</div>
         <div class="tab" onclick="filterTab(this,'domestic')">Domestic India</div>
         <div class="tab" onclick="filterTab(this,'honeymoon')">Honeymoon</div>
@@ -112,7 +118,7 @@ else
         else
         {
             <div class="packages-empty">
-                <div style="font-size:48px;">🏖️</div>
+                <div style="font-size:48px;"><i class="fa-solid fa-umbrella-beach" style="color:#c9a227;"></i></div>
                 <p>Holiday packages are being added. Check back soon or <a href="#enquire">enquire now</a>.</p>
             </div>
         }
@@ -124,15 +130,19 @@ else
    ════════════════════════════════════════════════ *@
 <div class="cta-banner" id="enquire">
     <div class="cta-text">
-        <h3>🗺 Can't find your dream destination?</h3>
+        <h3><i class="fa-solid fa-compass"></i> Can't find your dream destination?</h3>
         <p>
             Tell us where you want to go — our travel experts will craft a custom itinerary
             just for you, completely free. No obligation, just great travel planning.
         </p>
     </div>
     <div class="cta-btns">
-        <a href="tel:+919724895328" class="btn-cta-outline">📞 Call Us</a>
-        <a href="mailto:booking@tripmitraholidays.com" class="btn-cta-fill">✉ Send Enquiry</a>
+        <a href="tel:+919724895328" class="btn-cta-outline">
+            <i class="fa-solid fa-phone"></i> Call Us
+        </a>
+        <a href="mailto:booking@tripmitraholidays.com" class="btn-cta-fill">
+            <i class="fa-solid fa-envelope"></i> Send Enquiry
+        </a>
     </div>
 </div>
 
@@ -141,22 +151,22 @@ else
    ════════════════════════════════════════════════ *@
 <div class="trust-strip">
     <div class="trust-item">
-        <div class="trust-icon">✈️</div>
+        <div class="trust-icon"><i class="fa-solid fa-plane"></i></div>
         <div class="trust-num">500+</div>
         <div class="trust-lbl">Destinations Covered</div>
     </div>
     <div class="trust-item">
-        <div class="trust-icon">😊</div>
+        <div class="trust-icon"><i class="fa-solid fa-face-smile"></i></div>
         <div class="trust-num">10,000+</div>
         <div class="trust-lbl">Happy Travellers</div>
     </div>
     <div class="trust-item">
-        <div class="trust-icon">⭐</div>
+        <div class="trust-icon"><i class="fa-solid fa-star"></i></div>
         <div class="trust-num">4.9 / 5</div>
         <div class="trust-lbl">Average Rating</div>
     </div>
     <div class="trust-item">
-        <div class="trust-icon">🏆</div>
+        <div class="trust-icon"><i class="fa-solid fa-trophy"></i></div>
         <div class="trust-num">15+</div>
         <div class="trust-lbl">Years of Experience</div>
     </div>
@@ -173,7 +183,9 @@ else
                 <div class="eyebrow">Explore By Place</div>
                 <h2 class="section-h2">Popular <span>Destinations</span></h2>
             </div>
-            <a href="@Url.Action("Index","Packages")" class="view-all">All Destinations →</a>
+            <a href="@Url.Action("Index","Packages")" class="view-all">
+                All Destinations <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
     </section>
     <div class="dest-row">
@@ -192,7 +204,7 @@ else
 }
 
 @* ════════════════════════════════════════════════
-   TESTIMONIALS (static, no DB table yet)
+   TESTIMONIALS
    ════════════════════════════════════════════════ *@
 <div class="testimonials">
     <div class="section-header">
@@ -203,7 +215,9 @@ else
     </div>
     <div class="testimonials-grid">
         <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
+            <div class="testimonial-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
             <p class="testimonial-text">
                 "TripMitra planned our Bali honeymoon perfectly — every detail was thought through.
                 The resorts they recommended were stunning and the price was unbeatable!"
@@ -217,7 +231,9 @@ else
             </div>
         </div>
         <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
+            <div class="testimonial-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
             <p class="testimonial-text">
                 "Our family Kerala trip was absolutely amazing. The houseboat experience on the
                 backwaters was something our kids will never forget. Highly recommend!"
@@ -231,7 +247,9 @@ else
             </div>
         </div>
         <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
+            <div class="testimonial-stars">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
             <p class="testimonial-text">
                 "The Europe tour was beyond our expectations. 5 countries in 11 days, seamless
                 logistics, great hotels. TripMitra's team was supportive throughout the journey."
