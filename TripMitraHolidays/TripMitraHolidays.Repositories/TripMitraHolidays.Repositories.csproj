@@ -54,6 +54,8 @@
     <Compile Include="AdminUser\AdminUserRepository.cs" />
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Inquiries\IInquiryRepository.cs" />
+    <Compile Include="Inquiries\InquiryRepository.cs" />
     <Compile Include="Packages\IPackageRepository.cs" />
     <Compile Include="Packages\PackageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -131,6 +131,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\EnquiriesController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -168,6 +169,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\fontawesome.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -194,6 +196,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Enquiries\Index.cshtml" />
+    <Content Include="Views\Enquiries\Details.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
     <Content Include="Views\Packages\Create.cshtml" />
     <Content Include="Views\Packages\Edit.cshtml" />

@@ -50,6 +50,8 @@
     <Compile Include="Auth\IAuthService.cs" />
     <Compile Include="Auth\AuthService.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Inquiries\IInquiryService.cs" />
+    <Compile Include="Inquiries\InquiryService.cs" />
     <Compile Include="Packages\IPackageService.cs" />
     <Compile Include="Packages\PackageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

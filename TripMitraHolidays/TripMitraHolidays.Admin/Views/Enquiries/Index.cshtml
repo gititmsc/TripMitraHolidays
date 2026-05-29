@@ -1,0 +1,272 @@
+@model TripMitraHolidays.Core.ViewModels.InquiryListViewModel
+@{
+    ViewBag.Title = "Enquiries";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@functions {
+    string SortUrl(string col)
+    {
+        bool same = string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase);
+        string d = same && Model.SortDir == "asc" ? "desc" : "asc";
+        return Url.Action("Index", new { search = Model.Search, pageSize = Model.PageSize, sort = col, dir = d, page = 1 });
+    }
+    string SortClass(string col)
+    {
+        return string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase) ? "sort-active" : "";
+    }
+    System.Web.IHtmlString SortArrow(string col)
+    {
+        if (!string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase))
+            return new System.Web.HtmlString("<i class=\"fa-solid fa-sort\"></i>");
+        return new System.Web.HtmlString(Model.SortDir == "asc"
+            ? "<i class=\"fa-solid fa-sort-up\"></i>"
+            : "<i class=\"fa-solid fa-sort-down\"></i>");
+    }
+    string PageUrl(int p)
+    {
+        return Url.Action("Index", new { search = Model.Search, pageSize = Model.PageSize, sort = Model.SortColumn, dir = Model.SortDir, page = p });
+    }
+}
+
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+        <h1>Enquiries</h1>
+        <p>Customer travel enquiries &amp; quote requests</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success-admin">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z" /></svg>
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert-error-admin">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+        @TempData["Error"]
+    </div>
+}
+
+<div class="admin-card" style="overflow:visible;">
+
+    @* ── Card Header: title left, search right ── *@
+    <div class="pkg-list-header">
+        <h2 class="admin-card-title" style="margin:0;white-space:nowrap;">All Enquiries</h2>
+        @using (Html.BeginForm("Index", "Enquiries", FormMethod.Get, new { id = "filterForm" }))
+        {
+            <input type="hidden" name="sort" value="@Model.SortColumn" />
+            <input type="hidden" name="dir" value="@Model.SortDir" />
+            <input type="hidden" name="page" value="1" />
+            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+            <div class="pkg-filter-row">
+                <div class="pkg-filter-search">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="#9ca3af" class="filter-search-icon">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                    </svg>
+                    <input type="text" name="search" value="@Model.Search"
+                           placeholder="Search name, mobile, email, destination…" class="pkg-filter-input" />
+                </div>
+                <button type="submit" class="pkg-filter-btn">Apply</button>
+                <a href="@Url.Action("Index")" class="pkg-filter-reset">Reset</a>
+            </div>
+        }
+    </div>
+
+    @* ── Table ── *@
+    <div style="overflow-x:auto;">
+        <table class="admin-table" id="enquiriesTable">
+            <thead>
+                <tr>
+                    <th style="width:50px;">#</th>
+                    <th class="sort-th @SortClass("fullname")">
+                        <a href="@SortUrl("fullname")" class="sort-link">Name <span class="sort-arrow">@SortArrow("fullname")</span></a>
+                    </th>
+                    <th class="sort-th @SortClass("mobile")">
+                        <a href="@SortUrl("mobile")" class="sort-link">Contact <span class="sort-arrow">@SortArrow("mobile")</span></a>
+                    </th>
+                    <th class="sort-th @SortClass("destination")">
+                        <a href="@SortUrl("destination")" class="sort-link">Destination <span class="sort-arrow">@SortArrow("destination")</span></a>
+                    </th>
+                    <th class="sort-th @SortClass("traveldate")">
+                        <a href="@SortUrl("traveldate")" class="sort-link">Travel Date <span class="sort-arrow">@SortArrow("traveldate")</span></a>
+                    </th>
+                    <th>Persons</th>
+                    <th class="sort-th @SortClass("budget")">
+                        <a href="@SortUrl("budget")" class="sort-link">Budget <span class="sort-arrow">@SortArrow("budget")</span></a>
+                    </th>
+                    <th class="sort-th @SortClass("createddate")">
+                        <a href="@SortUrl("createddate")" class="sort-link">Received <span class="sort-arrow">@SortArrow("createddate")</span></a>
+                    </th>
+                    <th style="width:80px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Inquiries.Any())
+                {
+                    <tr>
+                        <td colspan="9" style="text-align:center;padding:48px 16px;color:#9ca3af;font-size:0.88rem;">
+                            No enquiries found.
+                            @if (!string.IsNullOrEmpty(Model.Search))
+                            {
+                                <a href="@Url.Action("Index")" style="color:var(--navy);font-weight:600;">Clear search →</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @foreach (var inq in Model.Inquiries)
+                {
+                    <tr>
+                        <td style="color:#9ca3af;font-size:.8rem;">@inq.InquiryId</td>
+                        <td>
+                            <div style="font-weight:600;color:#111827;font-size:.875rem;">@inq.FullName</div>
+                            @if (!string.IsNullOrEmpty(inq.City))
+                            {
+                                <div style="font-size:.75rem;color:#9ca3af;margin-top:2px;">@inq.City</div>
+                            }
+                        </td>
+                        <td>
+                            <div style="font-size:.875rem;font-weight:500;">
+                                <a href="tel:@inq.MobileNumber" style="color:#111827;text-decoration:none;">@inq.MobileNumber</a>
+                            </div>
+                            <div style="font-size:.75rem;color:#9ca3af;margin-top:2px;">
+                                <a href="mailto:@inq.EmailAddress" style="color:#9ca3af;text-decoration:none;">@inq.EmailAddress</a>
+                            </div>
+                        </td>
+                        <td style="font-size:.875rem;">
+                            @(string.IsNullOrEmpty(inq.PreferredDestination) ? "—" : inq.PreferredDestination)
+                        </td>
+                        <td style="white-space:nowrap;font-size:.875rem;">
+                            @(inq.TravelDate.HasValue ? inq.TravelDate.Value.ToString("dd MMM yyyy") : "—")
+                        </td>
+                        <td style="text-align:center;font-size:.875rem;">
+                            @(inq.NumberOfPersons.HasValue ? inq.NumberOfPersons.ToString() : "—")
+                        </td>
+                        <td style="font-size:.875rem;font-weight:@(inq.Budget.HasValue ? "600" : "400");">
+                            @if (inq.Budget.HasValue)
+                            {
+                                <i class="fa-solid fa-indian-rupee-sign"></i>@inq.Budget.Value.ToString("N0")
+                            }
+                            else
+                            {
+                                <text>—</text>
+                            }
+                        </td>
+                        <td style="white-space:nowrap;font-size:.8rem;color:#6b7280;">
+                            @inq.CreatedDate.ToLocalTime().ToString("dd MMM yyyy")<br />
+                            <span style="font-size:.73rem;">@inq.CreatedDate.ToLocalTime().ToString("hh:mm tt")</span>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:5px;align-items:center;">
+                                <a href="@Url.Action("Details", new { id = inq.InquiryId })"
+                                   class="tbl-btn view" title="View Details">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                    </svg>
+                                </a>
+                                @using (Html.BeginForm("Delete", "Enquiries", new { id = inq.InquiryId }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Delete this enquiry? This cannot be undone.');" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="tbl-btn delete" title="Delete">
+                                        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                        </svg>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* ── Footer: record count + page size + pagination ── *@
+    <div class="pkg-list-footer">
+        <div class="pkg-footer-left">
+            @if (Model.TotalCount > 0)
+            {
+                <span class="pkg-showing-text">
+                    Showing <strong>@Model.StartRecord</strong>&ndash;<strong>@Model.EndRecord</strong>
+                    of <strong>@Model.TotalCount</strong> enquir@(Model.TotalCount == 1 ? "y" : "ies")
+                </span>
+            }
+            else
+            {
+                <span class="pkg-showing-text">No enquiries found</span>
+            }
+            <select id="pageSizeSelect" class="pkg-pagesize-select">
+                @foreach (var sz in new[] { 10, 20, 50, 100 })
+                {
+                    <option value="@sz" @(Model.PageSize == sz ? "selected" : "")>@sz / page</option>
+                }
+            </select>
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pkg-pagination">
+                @if (Model.HasPrev)
+                {
+                    <a href="@PageUrl(Model.Page - 1)" class="pg-btn">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" /></svg>
+                    </a>
+                }
+                else
+                {
+                    <span class="pg-btn disabled"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" /></svg></span>
+                }
+
+                @{
+                    int tp = Model.TotalPages;
+                    int cp = Model.Page;
+                    var pageNums = new System.Collections.Generic.List<int>();
+                    for (int pi = 1; pi <= tp; pi++)
+                    {
+                        if (pi == 1 || pi == tp || (pi >= cp - 2 && pi <= cp + 2))
+                        {
+                            pageNums.Add(pi);
+                        }
+                    }
+                    int prevNum = 0;
+                    foreach (int pi in pageNums)
+                    {
+                        if (prevNum > 0 && pi - prevNum > 1)
+                        { <span class="pg-ellipsis">..</span> }
+                        if (pi == cp)
+                        { <span class="pg-btn active">@pi</span> }
+                    else
+                    { <a href="@PageUrl(pi)" class="pg-btn">@pi</a> }
+                prevNum = pi;
+            }
+                }
+
+                @if (Model.HasNext)
+                {
+                    <a href="@PageUrl(Model.Page + 1)" class="pg-btn">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></svg>
+                    </a>
+                }
+                else
+                {
+                    <span class="pg-btn disabled"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></svg></span>
+                }
+            </div>
+        }
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        document.getElementById('pageSizeSelect').addEventListener('change', function () {
+            var params = new URLSearchParams(window.location.search);
+            params.set('pageSize', this.value);
+            params.set('page', '1');
+            window.location.href = window.location.pathname + '?' + params.toString();
+        });
+    </script>
+}

@@ -1,0 +1,135 @@
+@model TripMitraHolidays.Core.ViewModels.PublicPackagesViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.MetaTitle       = Model.MetaTitle;
+    ViewBag.MetaDescription = Model.MetaDescription;
+
+    string activeCategory = (Model.Category ?? "").ToLower();
+    var categories = new[]
+    {
+        new { Key = "",              Label = "All" },
+        new { Key = "international", Label = "International" },
+        new { Key = "domestic",      Label = "Domestic India" },
+        new { Key = "honeymoon",     Label = "Honeymoon" },
+        new { Key = "adventure",     Label = "Adventure" },
+        new { Key = "family",        Label = "Family" },
+    };
+}
+
+@* ── Breadcrumb ── *@
+<div class="breadcrumb-wrap">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li>Packages</li>
+        @if (!string.IsNullOrEmpty(Model.Category))
+        {
+            <li>@System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Model.Category)</li>
+        }
+    </ol>
+</div>
+
+@* ── Page header ── *@
+<div class="page-header">
+    <h1>@(string.IsNullOrEmpty(Model.Category) ? "All Holiday Packages" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Model.Category) + " Holiday Packages")</h1>
+    <p>Curated itineraries, best prices, expert support — your perfect trip starts here.</p>
+</div>
+
+@* ── Category filter bar ── *@
+<div class="packages-filter-bar">
+    @foreach (var cat in categories)
+    {
+        bool isActive = cat.Key == activeCategory;
+        string href = cat.Key == ""
+            ? Url.Action("Index", "Packages")
+            : Url.Action("Index", "Packages", new { category = cat.Key });
+        <a href="@href" class="tab @(isActive ? "active" : "")">@cat.Label</a>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Search))
+    {
+        <span class="packages-count">Results for &ldquo;<strong>@Model.Search</strong>&rdquo;</span>
+    }
+    else
+    {
+        <span class="packages-count">Showing @Model.StartRecord&ndash;@Model.EndRecord of @Model.TotalCount packages</span>
+    }
+</div>
+
+@* ── Packages grid ── *@
+<section class="section" style="padding-top:30px;">
+    <div class="packages-grid">
+        @if (Model.Packages.Any())
+        {
+            foreach (var pkg in Model.Packages)
+            {
+                @Html.Partial("_PackageCard", pkg)
+            }
+        }
+        else
+        {
+            <div class="packages-empty">
+                <div style="font-size:48px;"><i class="fa-solid fa-magnifying-glass" style="color:#c9a227;"></i></div>
+                <p>No packages found. <a href="@Url.Action("Index","Packages")">View all packages</a> or <a href="@Url.Action("Index","Home")#enquire">send a custom enquiry</a>.</p>
+            </div>
+        }
+    </div>
+
+    @* ── Pagination ── *@
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination-wrap">
+            @if (Model.HasPrev)
+            {
+                <a href="@Url.Action("Index","Packages", new { category = Model.Category, q = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })"
+                   class="page-btn"><i class="fa-solid fa-arrow-left"></i> Prev</a>
+            }
+            else
+            {
+                <span class="page-btn disabled"><i class="fa-solid fa-arrow-left"></i> Prev</span>
+            }
+
+            @for (int p = 1; p <= Model.TotalPages; p++)
+            {
+                if (p == Model.Page)
+                {
+                    <span class="page-btn active">@p</span>
+                }
+                else if (p == 1 || p == Model.TotalPages || (p >= Model.Page - 2 && p <= Model.Page + 2))
+                {
+                    <a href="@Url.Action("Index","Packages", new { category = Model.Category, q = Model.Search, page = p, pageSize = Model.PageSize })"
+                       class="page-btn">@p</a>
+                }
+                else if (p == Model.Page - 3 || p == Model.Page + 3)
+                {
+                    <span class="page-btn disabled">&hellip;</span>
+                }
+            }
+
+            @if (Model.HasNext)
+            {
+                <a href="@Url.Action("Index","Packages", new { category = Model.Category, q = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })"
+                   class="page-btn">Next <i class="fa-solid fa-arrow-right"></i></a>
+            }
+            else
+            {
+                <span class="page-btn disabled">Next <i class="fa-solid fa-arrow-right"></i></span>
+            }
+        </div>
+    }
+</section>
+
+@* ── CTA ── *@
+<div class="cta-banner" id="enquire" style="margin-bottom:50px;">
+    <div class="cta-text">
+        <h3><i class="fa-solid fa-compass"></i> Can't find the perfect package?</h3>
+        <p>We'll build a custom itinerary just for you — free, with no obligation.</p>
+    </div>
+    <div class="cta-btns">
+        <a href="tel:+919724895328" class="btn-cta-outline">
+            <i class="fa-solid fa-phone"></i> Call Us
+        </a>
+        <a href="mailto:booking@tripmitraholidays.com" class="btn-cta-fill">
+            <i class="fa-solid fa-envelope"></i> Send Enquiry
+        </a>
+    </div>
+</div>

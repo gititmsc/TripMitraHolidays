@@ -15,6 +15,7 @@ namespace TripMitraHolidays.Repositories
         public DbSet<PackageItinerary> PackageItineraries { get; set; }
         public DbSet<PackageInclusion> PackageInclusions { get; set; }
         public DbSet<PackageExclusion> PackageExclusions { get; set; }
+        public DbSet<Inquiry> Inquiries { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -189,6 +190,27 @@ namespace TripMitraHolidays.Repositories
                         CONSTRAINT [FK_PackageExclusions_Packages] FOREIGN KEY ([PackageId])
                             REFERENCES [dbo].[Packages]([PackageId]) ON DELETE CASCADE
                     );
+                END
+            ");
+
+            context.Database.ExecuteSqlCommand(@"
+                IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='dbo' AND TABLE_NAME='Inquiries')
+                BEGIN
+                    CREATE TABLE [dbo].[Inquiries] (
+                        [InquiryId]             INT              IDENTITY(1,1) NOT NULL,
+                        [FullName]              NVARCHAR(150)    NOT NULL,
+                        [MobileNumber]          NVARCHAR(20)     NOT NULL,
+                        [EmailAddress]          NVARCHAR(150)    NOT NULL,
+                        [TravelDate]            DATE             NULL,
+                        [NumberOfPersons]       INT              NULL,
+                        [PreferredDestination]  NVARCHAR(200)    NULL,
+                        [City]                  NVARCHAR(100)    NULL,
+                        [Budget]                DECIMAL(18,2)    NULL,
+                        [Message]               NVARCHAR(MAX)    NULL,
+                        [CreatedDate]           DATETIME         NOT NULL DEFAULT(GETUTCDATE()),
+                        CONSTRAINT [PK_Inquiries] PRIMARY KEY CLUSTERED ([InquiryId] ASC)
+                    );
+                    CREATE NONCLUSTERED INDEX [IX_Inquiries_CreatedDate] ON [dbo].[Inquiries]([CreatedDate] DESC);
                 END
             ");
         }

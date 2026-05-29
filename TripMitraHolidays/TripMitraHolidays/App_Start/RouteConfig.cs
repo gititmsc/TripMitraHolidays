@@ -24,6 +24,18 @@ namespace TripMitraHolidays
                 defaults: new { controller = "Packages", action = "Index", category = UrlParameter.Optional }
             );
 
+            // Enquiry / Contact form
+            routes.MapRoute(
+                name: "Enquire",
+                url: "enquire",
+                defaults: new { controller = "Inquiry", action = "Index" }
+            );
+            routes.MapRoute(
+                name: "Contact",
+                url: "contact",
+                defaults: new { controller = "Inquiry", action = "Index" }
+            );
+
             // About page
             routes.MapRoute(
                 name: "About",

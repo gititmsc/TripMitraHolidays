@@ -1113,13 +1113,18 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .sort-th.sort-active { background: #f0f4fb; }
 
 .sort-arrow {
-    display: inline-block;
-    font-size: 0.68rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
     color: #bec5d1;
-    margin-left: 4px;
+    margin-left: 5px;
     vertical-align: middle;
+    line-height: 1;
 }
-.sort-th.sort-active .sort-arrow { color: var(--navy); }
+.sort-th.sort-active .sort-arrow { color: var(--gold); }
+
+/* Rupee icon sizing in table cells */
+.fa-indian-rupee-sign { font-size: 0.82em; vertical-align: baseline; margin-right: 1px; }
 
 /* ─── Package List Footer (showing + page size + paging) */
 .pkg-list-footer {
@@ -1203,3 +1208,68 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     .pkg-filter-search { width: 100%; }
     .pkg-list-footer { flex-direction: column; align-items: flex-start; }
 }
+
+/* ─────────────────────────────────────────────────────
+   ENQUIRIES MODULE — Detail View
+   ───────────────────────────────────────────────────── */
+.detail-card {
+    background: #fff; border: 1px solid #e8ecf5;
+    border-radius: 12px; padding: 24px;
+}
+.detail-card-title {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 1px solid #f0f2f8;
+}
+.detail-card-title svg { fill: var(--gold); }
+.detail-fields { display: flex; flex-direction: column; gap: 12px; }
+.detail-field { display: flex; flex-direction: column; gap: 3px; }
+.detail-label { font-size: 10px; font-weight: 700; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
+.detail-value { font-size: 13px; color: #333; font-weight: 500; }
+.detail-highlight { color: var(--navy); font-weight: 700; }
+
+/* Quick action buttons */
+.btn-action-lg {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: opacity .2s, transform .15s;
+}
+.btn-action-lg:hover { opacity: .88; transform: translateY(-1px); }
+.btn-action-lg svg { fill: currentColor; flex-shrink: 0; }
+.btn-call    { background: #0d1b4b; color: #fff; }
+.btn-email   { background: #6366f1; color: #fff; }
+.btn-whatsapp { background: #25d366; color: #fff; }
+.btn-delete-enquiry {
+    background: #fff;
+    color: #dc2626;
+    border: 1.5px solid #fca5a5;
+}
+.btn-delete-enquiry:hover { background: #fef2f2; border-color: #dc2626; opacity: 1; transform: none; }
+.btn-delete-enquiry svg { fill: #dc2626; }
+
+/* Enquiries list table extras */
+.td-truncate { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.td-center { text-align: center; }
+
+/* Alert success bar */
+.alert-success-bar {
+    background: #dcfce7; border: 1px solid #86efac;
+    border-radius: 8px; padding: 12px 18px;
+    font-size: 13px; color: #15803d; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+}
+
+/* Toolbar back button */
+.btn-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--navy);
+    text-decoration: none; padding: 6px 12px;
+    border: 1.5px solid #dde0f0; border-radius: 7px;
+    transition: background .2s; margin-right: 12px;
+}
+.btn-back:hover { background: #f4f6ff; }
+.btn-back svg { fill: var(--navy); }
+

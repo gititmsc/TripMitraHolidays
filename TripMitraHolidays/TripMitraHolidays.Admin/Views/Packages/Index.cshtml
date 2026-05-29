@@ -16,10 +16,13 @@
     {
         return string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase) ? "sort-active" : "";
     }
-    string SortArrow(string col)
+    System.Web.IHtmlString SortArrow(string col)
     {
-        if (!string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase)) return "⇅";
-        return Model.SortDir == "asc" ? "↑" : "↓";
+        if (!string.Equals(Model.SortColumn, col, System.StringComparison.OrdinalIgnoreCase))
+            return new System.Web.HtmlString("<i class=\"fa-solid fa-sort\"></i>");
+        return new System.Web.HtmlString(Model.SortDir == "asc"
+            ? "<i class=\"fa-solid fa-sort-up\"></i>"
+            : "<i class=\"fa-solid fa-sort-down\"></i>");
     }
     string PageUrl(int p)
     {
@@ -154,12 +157,12 @@
                         <td>
                             @if (pkg.DiscountPrice.HasValue && pkg.DiscountPrice < pkg.PackagePrice)
                             {
-                                <div style="font-weight:700;color:#059669;font-size:.875rem;">&#x20B9;@pkg.DiscountPrice.Value.ToString("N0")</div>
-                                <div style="font-size:.73rem;color:#9ca3af;text-decoration:line-through;">&#x20B9;@pkg.PackagePrice.ToString("N0")</div>
+                                <div style="font-weight:700;color:#059669;font-size:.875rem;"><i class="fa-solid fa-indian-rupee-sign"></i>@pkg.DiscountPrice.Value.ToString("N0")</div>
+                                <div style="font-size:.73rem;color:#9ca3af;text-decoration:line-through;"><i class="fa-solid fa-indian-rupee-sign"></i>@pkg.PackagePrice.ToString("N0")</div>
                             }
                             else
                             {
-                                <div style="font-weight:600;font-size:.875rem;">&#x20B9;@pkg.PackagePrice.ToString("N0")</div>
+                                <div style="font-weight:600;font-size:.875rem;"><i class="fa-solid fa-indian-rupee-sign"></i>@pkg.PackagePrice.ToString("N0")</div>
                             }
                         </td>
                         <td style="white-space:nowrap;font-size:.875rem;">@pkg.DurationDays D / @pkg.DurationNights N</td>

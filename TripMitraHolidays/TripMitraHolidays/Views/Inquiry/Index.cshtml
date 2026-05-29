@@ -1,0 +1,179 @@
+@model TripMitraHolidays.Core.ViewModels.InquiryFormViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.MetaTitle       = ViewBag.MetaTitle ?? "Enquire Now | TripMitra Holidays";
+    ViewBag.MetaDescription = ViewBag.MetaDescription ?? "Get a free customised travel quote from TripMitra Holidays.";
+}
+
+@* ── Breadcrumb ── *@
+<div class="breadcrumb-wrap">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+        <li>Enquire Now</li>
+    </ol>
+</div>
+
+@* ── Page Header ── *@
+<div class="page-header" style="padding-bottom:20px;">
+    <h1><i class="fa-solid fa-paper-plane" style="color:#c9a227;margin-right:8px;"></i> Get a Free Travel Quote</h1>
+    <p>Share your travel plans and our expert will craft the perfect itinerary for you within 24 hours.</p>
+</div>
+
+<div class="inquiry-page">
+
+    @* ── Success Banner ── *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="inquiry-success">
+            <i class="fa-solid fa-circle-check"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="inquiry-layout">
+
+        @* ═══════════════════════════════
+           INQUIRY FORM
+           ═══════════════════════════════ *@
+        <div class="inquiry-form-card">
+            <div class="inquiry-form-header">
+                <h2>Tell Us About Your Trip</h2>
+                <p>Fields marked <span class="req-star">*</span> are required.</p>
+            </div>
+
+            @using (Html.BeginForm("Index", "Inquiry", FormMethod.Post, new { @class = "inquiry-form", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @* Hidden: pre-filled package name context *@
+                if (!string.IsNullOrEmpty(Model.PackageName))
+                {
+                    <div class="pkg-context-badge">
+                        <i class="fa-solid fa-compass"></i>
+                        Enquiring about: <strong>@Model.PackageName</strong>
+                    </div>
+                    @Html.HiddenFor(m => m.PackageName)
+                }
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            @Html.LabelFor(m => m.FullName, new { @class = "form-label" })
+                            <span class="req-star">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Enter your full name" })
+                        @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "form-error" })
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            @Html.LabelFor(m => m.MobileNumber, new { @class = "form-label" })
+                            <span class="req-star">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control", placeholder = "10-digit mobile number", type = "tel" })
+                        @Html.ValidationMessageFor(m => m.MobileNumber, "", new { @class = "form-error" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            @Html.LabelFor(m => m.EmailAddress, new { @class = "form-label" })
+                            <span class="req-star">*</span>
+                        </div>
+                        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", placeholder = "your@email.com", type = "email" })
+                        @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "form-error" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.City, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Your city" })
+                        @Html.ValidationMessageFor(m => m.City, "", new { @class = "form-error" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PreferredDestination, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.PreferredDestination, new { @class = "form-control", placeholder = "e.g. Bali, Kerala, Europe" })
+                        @Html.ValidationMessageFor(m => m.PreferredDestination, "", new { @class = "form-error" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TravelDate, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.TravelDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessageFor(m => m.TravelDate, "", new { @class = "form-error" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NumberOfPersons, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.NumberOfPersons, new { @class = "form-control", placeholder = "e.g. 2", type = "number", min = "1", max = "100" })
+                        @Html.ValidationMessageFor(m => m.NumberOfPersons, "", new { @class = "form-error" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Budget, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Budget, new { @class = "form-control", placeholder = "e.g. 50000", type = "number", min = "0", step = "500" })
+                        @Html.ValidationMessageFor(m => m.Budget, "", new { @class = "form-error" })
+                    </div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    @Html.LabelFor(m => m.Message, new { @class = "form-label" })
+                    @Html.TextAreaFor(m => m.Message, new { @class = "form-control form-textarea", placeholder = "Tell us more about your travel plans, preferences, accommodation type, activities you enjoy, etc.", rows = "4" })
+                    @Html.ValidationMessageFor(m => m.Message, "", new { @class = "form-error" })
+                </div>
+
+                <button type="submit" class="btn-request-quote">
+                    <i class="fa-solid fa-paper-plane"></i> Request Quote
+                </button>
+            }
+        </div>
+
+        @* ═══════════════════════════════
+           SIDEBAR — Contact info
+           ═══════════════════════════════ *@
+        <div class="inquiry-sidebar">
+
+            <div class="inquiry-contact-card">
+                <div class="inquiry-contact-title">
+                    <i class="fa-solid fa-headset"></i> Talk to an Expert
+                </div>
+                <p style="font-size:12px;color:#6677aa;margin-bottom:18px;">
+                    Our travel consultants are available Mon–Sat, 9 AM – 7 PM IST.
+                </p>
+                <a href="tel:+919724895328" class="inquiry-contact-btn">
+                    <i class="fa-solid fa-phone"></i> +91 97248 95328
+                </a>
+                <a href="tel:+917016698238" class="inquiry-contact-btn" style="margin-top:8px;">
+                    <i class="fa-solid fa-phone"></i> +91 70166 98238
+                </a>
+                <a href="mailto:booking@tripmitraholidays.com" class="inquiry-contact-btn inquiry-contact-btn-ghost" style="margin-top:8px;">
+                    <i class="fa-solid fa-envelope"></i> booking@tripmitraholidays.com
+                </a>
+                <a href="https://wa.me/919724895328?text=Hi%2C%20I%27m%20interested%20in%20a%20holiday%20package"
+                   class="inquiry-contact-btn inquiry-contact-btn-whatsapp" style="margin-top:8px;" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+                </a>
+            </div>
+
+            <div class="inquiry-why-card">
+                <div class="inquiry-contact-title" style="margin-bottom:14px;">
+                    <i class="fa-solid fa-shield-halved"></i> Why Choose Us?
+                </div>
+                <ul class="inquiry-why-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Free itinerary planning</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Best price guarantee</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 15+ years experience</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 10,000+ happy travellers</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 24/7 on-trip support</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Flexible cancellation</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>@* /inquiry-layout *@
+</div>@* /inquiry-page *@
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
