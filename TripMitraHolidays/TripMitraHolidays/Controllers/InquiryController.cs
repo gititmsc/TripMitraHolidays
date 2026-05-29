@@ -60,11 +60,13 @@ namespace TripMitraHolidays.Controllers
                 CreatedDate          = DateTime.UtcNow
             };
 
-            // Save to database first — never block on email failure
+            // Save to database first — always succeeds regardless of email
             await _service.SubmitAsync(inquiry);
 
-            // Send emails asynchronously; exceptions are swallowed inside EmailService
-            _ = _emailService.SendInquiryEmailsAsync(inquiry);
+            // Send emails — awaited so ASP.NET doesn't see a pending async operation.
+            // Any SMTP failure is caught silently; the inquiry is already saved.
+            try { await _emailService.SendInquiryEmailsAsync(inquiry); }
+            catch { }
 
             string firstName = inquiry.FullName.Split(' ')[0];
             TempData["SuccessMessage"] = $"Thank you, {firstName}! Your enquiry has been received. " +
