@@ -4,7 +4,7 @@ namespace TripMitraHolidays.Core.ViewModels
 {
     public class HomeViewModel
     {
-        public string MetaTitle { get; set; } = "TripMitra Holidays – Explore More, Worry Less";
+        public string MetaTitle { get; set; } = "Trip Mitra Holidays – Explore More, Worry Less";
         public string MetaDescription { get; set; } = "Discover handpicked holiday packages for India and international destinations. Best prices, expert planning, 10,000+ happy travellers.";
         public string OgImage { get; set; }
 

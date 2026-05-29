@@ -25,7 +25,7 @@ namespace TripMitraHolidays.Controllers
 
             var vm = new HomeViewModel
             {
-                MetaTitle       = "TripMitra Holidays – Explore More, Worry Less",
+                MetaTitle       = "Trip Mitra Holidays – Explore More, Worry Less",
                 MetaDescription = "Discover handpicked holiday packages for India and international destinations. Best prices, expert planning, 10,000+ happy travellers.",
                 OgImage         = packages.FirstOrDefault()?.ThumbnailImage
             };
@@ -41,8 +41,8 @@ namespace TripMitraHolidays.Controllers
         // GET: /about
         public ActionResult About()
         {
-            ViewBag.MetaTitle       = "About Us | TripMitra Holidays";
-            ViewBag.MetaDescription = "Learn about TripMitra Holidays – your trusted travel partner for crafting unforgettable journeys since 2018.";
+            ViewBag.MetaTitle       = "About Us | Trip Mitra Holidays";
+            ViewBag.MetaDescription = "Learn about Trip Mitra Holidays – your trusted travel partner for crafting unforgettable journeys since 2018.";
             return View();
         }
 

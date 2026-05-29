@@ -11,7 +11,7 @@ namespace TripMitraHolidays.Core.ViewModels
         public string MetaTitle =>
             !string.IsNullOrEmpty(Package?.MetaTitle)
                 ? Package.MetaTitle
-                : (Package?.PackageName ?? "Package") + " | TripMitra Holidays";
+                : (Package?.PackageName ?? "Package") + " | Trip Mitra Holidays";
 
         public string MetaDescription =>
             !string.IsNullOrEmpty(Package?.MetaDescription)

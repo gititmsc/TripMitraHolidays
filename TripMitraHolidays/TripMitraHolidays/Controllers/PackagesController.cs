@@ -41,7 +41,7 @@ namespace TripMitraHolidays.Controllers
                 ? "Holiday Packages"
                 : new CultureInfo("en-IN").TextInfo.ToTitleCase(category.ToLower()) + " Holiday Packages";
 
-            vm.MetaTitle       = categoryTitle + " | TripMitra Holidays";
+            vm.MetaTitle       = categoryTitle + " | Trip Mitra Holidays";
             vm.MetaDescription = "Browse our curated " + categoryTitle.ToLower() +
                                  ". Best prices, expert itineraries, hassle-free travel planning.";
 
