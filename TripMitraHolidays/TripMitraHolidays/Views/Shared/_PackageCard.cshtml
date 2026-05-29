@@ -2,7 +2,7 @@
 @{
     string imgSrc   = string.IsNullOrEmpty(Model.ThumbnailImage)
                         ? "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80&fit=crop"
-                        : Model.ThumbnailImage;
+                        : "https://admin.tripmitraholidays.com" + Model.ThumbnailImage;
     string detailUrl = Url.RouteUrl("PackageDetail", new { slug = Model.Slug });
 }
 

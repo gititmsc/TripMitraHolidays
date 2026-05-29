@@ -6,8 +6,8 @@
     ViewBag.OgImage         = Model.OgImage;
 
     var pkg = Model.Package;
-    string bannerImg = !string.IsNullOrEmpty(pkg.BannerImage) ? pkg.BannerImage
-                     : !string.IsNullOrEmpty(pkg.ThumbnailImage) ? pkg.ThumbnailImage
+    string bannerImg = !string.IsNullOrEmpty(pkg.BannerImage) ? "https://admin.tripmitraholidays.com" + pkg.BannerImage
+                     : !string.IsNullOrEmpty(pkg.ThumbnailImage) ? "https://admin.tripmitraholidays.com" + pkg.ThumbnailImage
                      : "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80&fit=crop";
 }
 
