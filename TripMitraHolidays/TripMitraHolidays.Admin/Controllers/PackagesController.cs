@@ -310,7 +310,7 @@ namespace TripMitraHolidays.Admin.Controllers
                 ItinerariesJson = p.Itineraries?.Any() == true
                     ? JsonConvert.SerializeObject(
                         p.Itineraries.OrderBy(i => i.DayNumber)
-                         .Select(i => new { i.DayNumber, i.Title, i.Description }))
+                         .Select(i => new { dayNumber = i.DayNumber, title = i.Title, description = i.Description }))
                     : "[]",
                 InclusionsJson = p.Inclusions?.Any() == true
                     ? JsonConvert.SerializeObject(p.Inclusions.Select(i => i.Item))
