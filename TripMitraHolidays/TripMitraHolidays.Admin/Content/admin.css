@@ -686,6 +686,19 @@ body.admin-body {
 .tbl-btn.delete    { border-color: #dc2626; color: #dc2626; }
 .tbl-btn.delete:hover { background: rgba(220,38,38,.08); }
 
+/* Status badge (Active / Inactive pill) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.status-badge.active   { background: #dcfce7; color: #15803d; }
+.status-badge.inactive { background: #fee2e2; color: #b91c1c; }
+
 /* Package tags */
 .pkg-tag {
     display: inline-block;

@@ -45,6 +45,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="DTOs\LoginResult.cs" />
     <Compile Include="DTOs\PackageItineraryDto.cs" />
+    <Compile Include="Helpers\IdProtector.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Models\AdminUser.cs" />
     <Compile Include="Models\Inquiry.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="ViewModels\PackageFormViewModel.cs" />
     <Compile Include="ViewModels\PackageListViewModel.cs" />
     <Compile Include="ViewModels\PublicPackagesViewModel.cs" />
+    <Compile Include="ViewModels\UserFormViewModel.cs" />
+    <Compile Include="ViewModels\UserListViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

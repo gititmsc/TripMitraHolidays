@@ -58,6 +58,8 @@
     <Compile Include="Inquiries\InquiryService.cs" />
     <Compile Include="Packages\IPackageService.cs" />
     <Compile Include="Packages\PackageService.cs" />
+    <Compile Include="Users\IUserService.cs" />
+    <Compile Include="Users\UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

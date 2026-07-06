@@ -1,0 +1,88 @@
+@model TripMitraHolidays.Core.ViewModels.UserFormViewModel
+@{
+    bool isEdit = Model.IsEditMode;
+    ViewBag.Title = isEdit ? "Edit User" : "Add User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+        <h1>@(isEdit ? "Edit User" : "Add New User")</h1>
+        <p>@(isEdit ? "Update account details for " + Model.FullName : "Create a new admin panel account")</p>
+    </div>
+    <a href="@Url.Action("Index")" class="btn-secondary-admin">
+        &larr; Back to Users
+    </a>
+</div>
+
+@using (Html.BeginForm("Manage", "Users", FormMethod.Post, new { id = "userForm", autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.EncryptedId)
+    @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+
+    <div class="form-section">
+        <div class="form-section-header">
+            <span class="form-section-num">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </span>
+            <h3 class="form-section-title">User Details</h3>
+        </div>
+        <div class="form-section-body">
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FullName, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "e.g. Sanket Shah" })
+                    @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "field-error" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "admin@tripmitraholidays.com", type = "email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-error" })
+                </div>
+            </div>
+
+            <div class="form-row-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = isEdit ? "form-label" : "form-label required" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = isEdit ? "Leave blank to keep current" : "Minimum 6 characters", autocomplete = "new-password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "field-error" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = isEdit ? "form-label" : "form-label required" })
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Re-enter password", autocomplete = "new-password" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "field-error" })
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 0 4px;">
+                <label class="toggle-switch" style="flex-shrink:0;">
+                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "toggle-checkbox", id = "IsActive" })
+                    <span class="toggle-thumb"></span>
+                </label>
+                <div>
+                    <span class="toggle-label" style="cursor:pointer;" onclick="document.getElementById('IsActive').click()">Active</span>
+                    <span class="toggle-hint">User can log in to the admin panel</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="margin-top:6px;display:flex;gap:10px;">
+        <button type="submit" class="btn-primary-admin" id="saveBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right:6px;">
+                <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+            </svg>
+            @(isEdit ? "Save Changes" : "Create User")
+        </button>
+        <a href="@Url.Action("Index")" class="btn-secondary-admin">Cancel</a>
+    </div>
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
