@@ -26,7 +26,7 @@ namespace TripMitraHolidays.Admin.Controllers
 
         // GET: /Packages
         public async Task<ActionResult> Index(
-            string search = "", string status = "all",
+            string search = "", string status = "active",
             string sort = "displayorder", string dir = "asc",
             int page = 1, int pageSize = 10)
         {

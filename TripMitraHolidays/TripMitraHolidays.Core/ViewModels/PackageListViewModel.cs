@@ -13,7 +13,7 @@ namespace TripMitraHolidays.Core.ViewModels
         public string SortColumn { get; set; } = "displayorder";
         public string SortDir { get; set; } = "asc";
         public string Search { get; set; } = "";
-        public string StatusFilter { get; set; } = "all";
+        public string StatusFilter { get; set; } = "active";
 
         public int TotalPages => PageSize > 0 ? (int)Math.Ceiling((double)TotalCount / PageSize) : 1;
         public bool HasPrev => Page > 1;
