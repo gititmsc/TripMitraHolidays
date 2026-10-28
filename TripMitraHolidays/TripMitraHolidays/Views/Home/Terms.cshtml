@@ -1,0 +1,87 @@
+@using System.Configuration
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section" style="min-height:60vh;">
+    <div class="section-header">
+        <div>
+            <div class="eyebrow">Legal</div>
+            <h1 class="section-h2">Terms &amp; <span>Conditions</span></h1>
+        </div>
+    </div>
+
+    <div style="max-width:800px;font-size:14px;color:#444;line-height:1.9;">
+        <p style="margin-bottom:16px;"><em>Last updated: October 2026</em></p>
+
+        <p style="margin-bottom:16px;">
+            These Terms &amp; Conditions govern your use of this website and any holiday package, enquiry or
+            booking made with Trip Mitra Holidays. By submitting an enquiry or confirming a booking, you agree
+            to the terms below.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">1. Quotes &amp; Bookings</h3>
+        <p style="margin-bottom:16px;">
+            Package prices shown on this website are indicative and subject to change based on travel dates,
+            availability, number of travellers and seasonal pricing from our hotel, airline and transport
+            partners. A booking is confirmed only after we issue a written confirmation and the applicable
+            advance payment has been received.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">2. Payments</h3>
+        <p style="margin-bottom:16px;">
+            Bookings typically require an advance payment at the time of confirmation, with the balance due
+            before travel as communicated in your itinerary/invoice. Payment schedules may vary by package and
+            will be shared in writing before confirmation.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">3. Travel Documents</h3>
+        <p style="margin-bottom:16px;">
+            Travellers are responsible for holding valid passports, visas, travel insurance and any other
+            documentation required for their itinerary. Trip Mitra Holidays can assist with guidance but is not
+            liable for denied boarding or entry due to incomplete or invalid documents.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">4. Changes by Trip Mitra Holidays</h3>
+        <p style="margin-bottom:16px;">
+            Itineraries may be adjusted due to circumstances beyond our control — weather, local conditions,
+            operator changes, government regulations or force majeure events. We will make reasonable efforts
+            to offer a comparable alternative in such cases.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">5. Liability</h3>
+        <p style="margin-bottom:16px;">
+            Trip Mitra Holidays acts as an agent/facilitator between travellers and third-party service
+            providers (hotels, airlines, transport operators, local vendors). We are not liable for acts,
+            omissions, delays or losses caused directly by these third parties, though we will assist travellers
+            in resolving issues wherever possible.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">6. Cancellations &amp; Refunds</h3>
+        <p style="margin-bottom:16px;">
+            Cancellation charges and refund timelines are set out in our
+            <a href="@Url.RouteUrl("CancellationPolicy")">Cancellation &amp; Refund Policy</a>, which forms part
+            of these Terms.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">7. Website Use</h3>
+        <p style="margin-bottom:16px;">
+            Content on this website (text, images, package details) is for informational purposes and may be
+            updated without prior notice. You agree not to misuse the website, including attempting
+            unauthorised access to our systems or data.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">8. Governing Law</h3>
+        <p style="margin-bottom:16px;">
+            These Terms are governed by the laws of India, and any disputes shall be subject to the jurisdiction
+            of the courts where Trip Mitra Holidays is registered.
+        </p>
+
+        <h3 style="margin:24px 0 10px;">9. Contact Us</h3>
+        <p style="margin-bottom:32px;">
+            For questions about these Terms, write to us at
+            <a href="mailto:@ConfigurationManager.AppSettings["CompanyEmail"]">@ConfigurationManager.AppSettings["CompanyEmail"]</a> or call
+            <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]">@ConfigurationManager.AppSettings["CompanyPhoneDisplay"]</a>.
+        </p>
+    </div>
+</section>

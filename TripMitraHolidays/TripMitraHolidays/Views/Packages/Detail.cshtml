@@ -1,4 +1,5 @@
 @model TripMitraHolidays.Core.ViewModels.PackageDetailViewModel
+@using System.Configuration
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.MetaTitle       = Model.MetaTitle;
@@ -8,7 +9,7 @@
     var pkg = Model.Package;
     string bannerImg = !string.IsNullOrEmpty(pkg.BannerImage) ? "https://admin.tripmitraholidays.com" + pkg.BannerImage
                      : !string.IsNullOrEmpty(pkg.ThumbnailImage) ? "https://admin.tripmitraholidays.com" + pkg.ThumbnailImage
-                     : "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80&fit=crop";
+                     : TripMitraHolidays.Core.Helpers.PlaceholderImages.ForCategory(pkg.TourCategory);
 }
 
 @* ── Breadcrumb ── *@
@@ -27,7 +28,8 @@
         <img src="@bannerImg" alt="@pkg.PackageName" loading="eager" />
         <div class="pkg-detail-banner-overlay"></div>
         <div class="pkg-detail-banner-content">
-            <h1 class="pkg-detail-title">@pkg.PackageName</h1>
+            <div class="pkg-detail-eyebrow" style="font-size:13px;opacity:.85;letter-spacing:.5px;margin-bottom:4px;">@pkg.PackageName</div>
+            <h1 class="pkg-detail-title">@Model.SeoH1</h1>
             <div class="pkg-detail-meta">
                 @if (!string.IsNullOrEmpty(pkg.Destination))
                 {
@@ -61,11 +63,24 @@
 
         <div class="pkg-detail-body">
 
+            @* Answer-first summary — direct, specific facts up front (destination, duration, price, what's included),
+               built from real package fields so it's accurate, not generic filler. Helps both human skimmers and
+               AI-answer extraction (ChatGPT/Gemini/Perplexity/Google AI Overviews favour a direct answer up top). *@
+            <div class="pkg-section" style="background:#f8f9ff;border-radius:10px;padding:16px 18px;">
+                <p style="font-size:14px;color:#0d1b4b;font-weight:600;margin:0;">
+                    A @pkg.DurationNights-night @pkg.Destination trip from @pkg.StartingCity typically costs
+                    &#8377;@((pkg.DiscountPrice ?? pkg.PackagePrice).ToString("N0")) per person@(!string.IsNullOrEmpty(pkg.MealType) ? ", including " + pkg.MealType.ToLowerInvariant() : "")@(pkg.IsFlightIncluded ? " and flights" : "")@(pkg.IsVisaIncluded ? " and visa assistance" : "").
+                </p>
+                <p style="font-size:11px;color:#888;margin:8px 0 0;">
+                    Last updated: @((pkg.UpdatedDate ?? pkg.CreatedDate).ToString("MMMM yyyy"))
+                </p>
+            </div>
+
             @* Overview *@
             @if (!string.IsNullOrEmpty(pkg.ShortDescription) || !string.IsNullOrEmpty(pkg.Description))
             {
                 <div class="pkg-section">
-                    <div class="pkg-section-title">Overview</div>
+                    <h2 class="pkg-section-title">Overview</h2>
                     @if (!string.IsNullOrEmpty(pkg.Description))
                     {
                         <p>@Html.Raw(pkg.Description)</p>
@@ -77,9 +92,28 @@
                 </div>
             }
 
+            @* Photo gallery *@
+            @if (pkg.Images != null && pkg.Images.Any())
+            {
+                <div class="pkg-section">
+                    <h2 class="pkg-section-title">Photo Gallery</h2>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:4px;">
+                        @foreach (var img in pkg.Images.OrderBy(i => i.DisplayOrder))
+                        {
+                            <a href="https://admin.tripmitraholidays.com@img.ImagePath" target="_blank" rel="noopener" style="display:block;border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
+                                <img src="https://admin.tripmitraholidays.com@img.ImagePath"
+                                     alt="@pkg.PackageName - photo @(img.DisplayOrder + 1)"
+                                     loading="lazy"
+                                     style="width:100%;height:100%;object-fit:cover;" />
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
             @* Package highlights *@
             <div class="pkg-section">
-                <div class="pkg-section-title">Package Highlights</div>
+                <h2 class="pkg-section-title">Package Highlights</h2>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:4px;">
                     @if (!string.IsNullOrEmpty(pkg.MealType))
                     {
@@ -123,7 +157,7 @@
             @if (pkg.Itineraries != null && pkg.Itineraries.Any())
             {
                 <div class="pkg-section">
-                    <div class="pkg-section-title">Day-by-Day Itinerary</div>
+                    <h2 class="pkg-section-title">Day-by-Day Itinerary</h2>
                     @foreach (var day in pkg.Itineraries.OrderBy(d => d.DayNumber))
                     {
                         <div class="itinerary-item">
@@ -145,7 +179,7 @@
                  (pkg.Exclusions != null && pkg.Exclusions.Any()))
             {
                 <div class="pkg-section">
-                    <div class="pkg-section-title">Inclusions &amp; Exclusions</div>
+                    <h2 class="pkg-section-title">Inclusions &amp; Exclusions</h2>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
                         @if (pkg.Inclusions != null && pkg.Inclusions.Any())
                         {
@@ -175,6 +209,50 @@
                 </div>
             }
 
+            @* Cancellation terms *@
+            <div class="pkg-section">
+                <h2 class="pkg-section-title">Cancellation Terms</h2>
+                <p style="font-size:13px;color:#555;">
+                    Need to cancel or reschedule? See our full
+                    <a href="@Url.RouteUrl("CancellationPolicy")" style="color:#c9a227;font-weight:600;">Cancellation &amp; Refund Policy</a>
+                    for timelines and refund rules. Our team can also talk you through the options for this specific package.
+                </p>
+            </div>
+
+            @* FAQ *@
+            @{
+                bool isIndia   = string.Equals(pkg.Country, "India", System.StringComparison.OrdinalIgnoreCase);
+                var faqs = new List<Tuple<string, string>>
+                {
+                    Tuple.Create(
+                        $"What's the best time to visit {pkg.Destination}?",
+                        $"{pkg.Destination} can be visited across most of the year, though your travel dates, weather preferences and local events may affect the ideal window. Let our travel experts suggest the best time for your trip."),
+                    Tuple.Create(
+                        isIndia ? $"Do I need any special documents to travel to {pkg.Destination}?" : $"Do I need a visa for {pkg.Country}?",
+                        isIndia
+                            ? "No visa is required for Indian citizens travelling within India — a valid government photo ID is sufficient."
+                            : $"Visa requirements for Indian travellers can change, so please confirm the latest rules for {pkg.Country} with us — we'll guide you through the documentation and visa process for this package."),
+                    Tuple.Create(
+                        "Is this package good for families?",
+                        $"Yes — this {pkg.DurationNights}N/{pkg.DurationDays}D {pkg.Destination} package can be tailored for families and groups. Let us know your group size and preferences when you enquire and we'll adjust the itinerary accordingly."),
+                    Tuple.Create(
+                        "Is the price per person or total?",
+                        "The price shown is per person, typically based on double/twin sharing. Contact us for family, group or single-traveller pricing.")
+                };
+            }
+            <div class="pkg-section">
+                <h2 class="pkg-section-title">Frequently Asked Questions</h2>
+                @foreach (var faq in faqs)
+                {
+                    <div style="margin-bottom:14px;">
+                        <h3 style="font-weight:700;font-size:13px;color:#0d1b4b;margin-bottom:4px;">
+                            <i class="fa-solid fa-circle-question" style="color:#c9a227;margin-right:6px;"></i>@faq.Item1
+                        </h3>
+                        <p style="font-size:13px;color:#555;margin-left:20px;">@faq.Item2</p>
+                    </div>
+                }
+            </div>
+
         </div>@* /pkg-detail-body *@
 
         @* ── Booking Sidebar ── *@
@@ -196,7 +274,7 @@
                class="btn-book">
                 <i class="fa-solid fa-paper-plane"></i> Request Quote
             </a>
-            <a href="tel:+919724895328" class="btn-enquire">
+            <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]" class="btn-enquire">
                 <i class="fa-solid fa-phone"></i> Call to Enquire
             </a>
 
@@ -236,6 +314,12 @@
                     <i class="fa-solid fa-location-dot" style="color:#c9a227;"></i>
                     Departing from: <strong>@pkg.StartingCity</strong>
                 </div>
+                <div style="font-size:12px;margin-top:6px;">
+                    <a href="@Url.RouteUrl("DestinationCityLanding", new { destinationSlug = TripMitraHolidays.Core.Helpers.SlugHelper.Slugify(pkg.Destination), citySlug = TripMitraHolidays.Core.Helpers.SlugHelper.Slugify(pkg.StartingCity) })"
+                       style="color:#c9a227;font-weight:600;">
+                        See all @pkg.Destination tour packages from @pkg.StartingCity
+                    </a>
+                </div>
             }
         </div>
 
@@ -272,7 +356,7 @@
         <p>Talk to our travel experts — we'll tailor every detail to your preferences and budget.</p>
     </div>
     <div class="cta-btns">
-        <a href="tel:+919724895328" class="btn-cta-outline">
+        <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]" class="btn-cta-outline">
             <i class="fa-solid fa-phone"></i> Call Us
         </a>
         <a href="@Url.Action("Index","Inquiry", new { destination = pkg.Destination, packageName = pkg.PackageName })"
@@ -281,3 +365,58 @@
         </a>
     </div>
 </div>
+
+@section structuredData
+{
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@@type": "ListItem", "position": 1, "name": "Home", "item": "@(Url.Action("Index", "Home", null, Request.Url.Scheme))" },
+            { "@@type": "ListItem", "position": 2, "name": "Packages", "item": "@(Url.Action("Index", "Packages", null, Request.Url.Scheme))" },
+            { "@@type": "ListItem", "position": 3, "name": "@Html.Raw(System.Web.Helpers.Json.Encode(pkg.PackageName).Trim('"'))" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "TouristTrip",
+        "name": @Html.Raw(System.Web.Helpers.Json.Encode(pkg.PackageName)),
+        "description": @Html.Raw(System.Web.Helpers.Json.Encode(pkg.ShortDescription ?? pkg.PackageName)),
+        "image": @Html.Raw(System.Web.Helpers.Json.Encode(bannerImg)),
+        "touristType": @Html.Raw(System.Web.Helpers.Json.Encode(pkg.TourCategory ?? "Leisure")),
+        "itinerary": {
+            "@@type": "ItemList",
+            "numberOfItems": @pkg.DurationDays
+        },
+        "offers": {
+            "@@type": "Offer",
+            "price": "@((pkg.DiscountPrice ?? pkg.PackagePrice).ToString("F2"))",
+            "priceCurrency": "INR",
+            "availability": "https://schema.org/InStock",
+            "url": "@(Url.RouteUrl("PackageDetail", new { slug = pkg.Slug }, Request.Url.Scheme))"
+        }
+    }
+    </script>
+    @{
+        var faqSchema = new
+        {
+            context = "https://schema.org",
+            type = "FAQPage",
+            mainEntity = faqs.Select(f => new
+            {
+                type = "Question",
+                name = f.Item1,
+                acceptedAnswer = new { type = "Answer", text = f.Item2 }
+            })
+        };
+        string faqJson = System.Web.Helpers.Json.Encode(faqSchema)
+            .Replace("\"context\"", "\"@context\"")
+            .Replace("\"type\"", "\"@type\"");
+    }
+    <script type="application/ld+json">
+        @Html.Raw(faqJson)
+    </script>
+}

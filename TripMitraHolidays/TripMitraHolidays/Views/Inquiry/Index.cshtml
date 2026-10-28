@@ -1,4 +1,5 @@
 @model TripMitraHolidays.Core.ViewModels.InquiryFormViewModel
+@using System.Configuration
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.MetaTitle       = ViewBag.MetaTitle ?? "Enquire Now | TripMitra Holidays";
@@ -28,6 +29,11 @@
             <i class="fa-solid fa-circle-check"></i>
             @TempData["SuccessMessage"]
         </div>
+        <script>
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'generate_lead', { form_name: 'enquiry_form' });
+            }
+        </script>
     }
 
     <div class="inquiry-layout">
@@ -140,16 +146,16 @@
                 <p style="font-size:12px;color:#6677aa;margin-bottom:18px;">
                     Our travel consultants are available Mon–Sat, 9 AM – 7 PM IST.
                 </p>
-                <a href="tel:+919724895328" class="inquiry-contact-btn">
-                    <i class="fa-solid fa-phone"></i> +91 97248 95328
+                <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]" class="inquiry-contact-btn">
+                    <i class="fa-solid fa-phone"></i> @ConfigurationManager.AppSettings["CompanyPhoneDisplay"]
                 </a>
-                <a href="tel:+917016698238" class="inquiry-contact-btn" style="margin-top:8px;">
-                    <i class="fa-solid fa-phone"></i> +91 70166 98238
+                <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneSecondaryE164"]" class="inquiry-contact-btn" style="margin-top:8px;">
+                    <i class="fa-solid fa-phone"></i> @ConfigurationManager.AppSettings["CompanyPhoneSecondaryDisplay"]
                 </a>
-                <a href="mailto:booking@tripmitraholidays.com" class="inquiry-contact-btn inquiry-contact-btn-ghost" style="margin-top:8px;">
-                    <i class="fa-solid fa-envelope"></i> booking@tripmitraholidays.com
+                <a href="mailto:@ConfigurationManager.AppSettings["CompanyEmail"]" class="inquiry-contact-btn inquiry-contact-btn-ghost" style="margin-top:8px;">
+                    <i class="fa-solid fa-envelope"></i> @ConfigurationManager.AppSettings["CompanyEmail"]
                 </a>
-                <a href="https://wa.me/919724895328?text=Hi%2C%20I%27m%20interested%20in%20a%20holiday%20package"
+                <a href="https://wa.me/@(ConfigurationManager.AppSettings["WhatsAppNumber"])?text=Hi%2C%20I%27m%20interested%20in%20a%20holiday%20package"
                    class="inquiry-contact-btn inquiry-contact-btn-whatsapp" style="margin-top:8px;" target="_blank" rel="noopener">
                     <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
                 </a>
@@ -176,4 +182,18 @@
 
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section structuredData
+{
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@@type": "ListItem", "position": 1, "name": "Home", "item": "@(Url.Action("Index", "Home", null, Request.Url.Scheme))" },
+            { "@@type": "ListItem", "position": 2, "name": "Enquire Now", "item": "@(Url.RouteUrl("Enquire", null, Request.Url.Scheme))" }
+        ]
+    }
+    </script>
 }

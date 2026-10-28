@@ -1,6 +1,7 @@
+@using System.Configuration
 <div class="topbar">
     <div class="topbar-left">
-        <span><i class="fa-solid fa-phone"></i> <a href="tel:+919724895328">+91 97248 95328</a></span>
-        <span><i class="fa-solid fa-envelope"></i> <a href="mailto:booking@tripmitraholidays.com">booking@tripmitraholidays.com</a></span>
+        <span><i class="fa-solid fa-phone"></i> <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]">@ConfigurationManager.AppSettings["CompanyPhoneDisplay"]</a></span>
+        <span><i class="fa-solid fa-envelope"></i> <a href="mailto:@ConfigurationManager.AppSettings["CompanyEmail"]">@ConfigurationManager.AppSettings["CompanyEmail"]</a></span>
     </div>
 </div>

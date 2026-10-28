@@ -1,4 +1,5 @@
 @model TripMitraHolidays.Core.ViewModels.PublicPackagesViewModel
+@using System.Configuration
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.MetaTitle       = Model.MetaTitle;
@@ -30,8 +31,8 @@
 
 @* ── Page header ── *@
 <div class="page-header">
-    <h1>@(string.IsNullOrEmpty(Model.Category) ? "All Holiday Packages" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Model.Category) + " Holiday Packages")</h1>
-    <p>Curated itineraries, best prices, expert support — your perfect trip starts here.</p>
+    <h1>@Model.IntroHeading</h1>
+    <p>@Model.IntroText</p>
 </div>
 
 @* ── Category filter bar ── *@
@@ -125,11 +126,25 @@
         <p>We'll build a custom itinerary just for you — free, with no obligation.</p>
     </div>
     <div class="cta-btns">
-        <a href="tel:+919724895328" class="btn-cta-outline">
+        <a href="tel:@ConfigurationManager.AppSettings["CompanyPhoneE164"]" class="btn-cta-outline">
             <i class="fa-solid fa-phone"></i> Call Us
         </a>
-        <a href="mailto:booking@tripmitraholidays.com" class="btn-cta-fill">
+        <a href="mailto:@ConfigurationManager.AppSettings["CompanyEmail"]" class="btn-cta-fill">
             <i class="fa-solid fa-envelope"></i> Send Enquiry
         </a>
     </div>
 </div>
+
+@section structuredData
+{
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@@type": "ListItem", "position": 1, "name": "Home", "item": "@(Url.Action("Index", "Home", null, Request.Url.Scheme))" },
+            { "@@type": "ListItem", "position": 2, "name": "Packages", "item": "@(Url.Action("Index", "Packages", null, Request.Url.Scheme))" }
+        ]
+    }
+    </script>
+}

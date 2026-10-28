@@ -1,3 +1,19 @@
+@using System.Configuration
+@{
+    string fbUrl  = ConfigurationManager.AppSettings["SocialFacebookUrl"];
+    string igUrl  = ConfigurationManager.AppSettings["SocialInstagramUrl"];
+    string twUrl  = ConfigurationManager.AppSettings["SocialTwitterUrl"];
+    string ytUrl  = ConfigurationManager.AppSettings["SocialYoutubeUrl"];
+    bool hasAnySocial = !string.IsNullOrEmpty(fbUrl) || !string.IsNullOrEmpty(igUrl)
+                      || !string.IsNullOrEmpty(twUrl) || !string.IsNullOrEmpty(ytUrl);
+
+    string companyPhoneDisplay    = ConfigurationManager.AppSettings["CompanyPhoneDisplay"];
+    string companyPhoneE164       = ConfigurationManager.AppSettings["CompanyPhoneE164"];
+    string companyPhone2Display   = ConfigurationManager.AppSettings["CompanyPhoneSecondaryDisplay"];
+    string companyPhone2E164      = ConfigurationManager.AppSettings["CompanyPhoneSecondaryE164"];
+    string companyEmail           = ConfigurationManager.AppSettings["CompanyEmail"];
+    string googleReviewUrl        = ConfigurationManager.AppSettings["GoogleReviewUrl"];
+}
 <footer class="footer">
     <div class="footer-grid">
 
@@ -9,12 +25,27 @@
                 Explore More, Worry Less. Crafting unforgettable journeys since 2018 —
                 personalised, trusted, and always by your side.
             </p>
-            <div class="footer-socials">
-                <a href="#" class="soc-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="soc-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="soc-btn" aria-label="Twitter / X"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" class="soc-btn" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-            </div>
+            @if (hasAnySocial)
+            {
+                <div class="footer-socials">
+                    @if (!string.IsNullOrEmpty(fbUrl))
+                    {
+                        <a href="@fbUrl" class="soc-btn" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+                    }
+                    @if (!string.IsNullOrEmpty(igUrl))
+                    {
+                        <a href="@igUrl" class="soc-btn" aria-label="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+                    }
+                    @if (!string.IsNullOrEmpty(twUrl))
+                    {
+                        <a href="@twUrl" class="soc-btn" aria-label="Twitter / X" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
+                    }
+                    @if (!string.IsNullOrEmpty(ytUrl))
+                    {
+                        <a href="@ytUrl" class="soc-btn" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+                    }
+                </div>
+            }
         </div>
 
         <div class="footer-col">
@@ -44,16 +75,25 @@
                 <div class="footer-contact-item">
                     <span class="footer-contact-icon"><i class="fa-solid fa-phone"></i></span>
                     <span class="footer-contact-text">
-                        <a href="tel:+919724895328" style="color:inherit;text-decoration:none;">+91 97248 95328</a><br />
-                        <a href="tel:+917016698238" style="color:inherit;text-decoration:none;">+91 70166 98238</a>
+                        <a href="tel:@companyPhoneE164" style="color:inherit;text-decoration:none;">@companyPhoneDisplay</a><br />
+                        <a href="tel:@companyPhone2E164" style="color:inherit;text-decoration:none;">@companyPhone2Display</a>
                     </span>
                 </div>
                 <div class="footer-contact-item">
                     <span class="footer-contact-icon"><i class="fa-solid fa-envelope"></i></span>
                     <span class="footer-contact-text">
-                        <a href="mailto:booking@tripmitraholidays.com" style="color:inherit;text-decoration:none;">booking@tripmitraholidays.com</a>
+                        <a href="mailto:@companyEmail" style="color:inherit;text-decoration:none;">@companyEmail</a>
                     </span>
                 </div>
+                @if (!string.IsNullOrEmpty(googleReviewUrl))
+                {
+                    <div class="footer-contact-item">
+                        <span class="footer-contact-icon"><i class="fa-solid fa-star"></i></span>
+                        <span class="footer-contact-text">
+                            <a href="@googleReviewUrl" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Rate us on Google</a>
+                        </span>
+                    </div>
+                }
             </div>
         </div>
 
@@ -62,9 +102,9 @@
     <div class="footer-bottom">
         <p>&copy; @DateTime.Now.Year Trip Mitra Holidays. All rights reserved.</p>
         <div class="footer-bottom-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms &amp; Conditions</a>
-            <a href="#">Cancellation Policy</a>
+            <a href="@Url.RouteUrl("PrivacyPolicy")">Privacy Policy</a>
+            <a href="@Url.RouteUrl("TermsConditions")">Terms &amp; Conditions</a>
+            <a href="@Url.RouteUrl("CancellationPolicy")">Cancellation Policy</a>
         </div>
     </div>
 </footer>

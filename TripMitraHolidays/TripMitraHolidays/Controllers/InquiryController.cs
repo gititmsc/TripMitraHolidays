@@ -26,6 +26,7 @@ namespace TripMitraHolidays.Controllers
         {
             ViewBag.MetaTitle       = "Enquire Now | TripMitra Holidays";
             ViewBag.MetaDescription = "Get a free customised travel quote from TripMitra Holidays. Our experts will contact you within 24 hours.";
+            ViewBag.CanonicalUrl    = Url.RouteUrl("Enquire", null, Request.Url?.Scheme ?? "https");
 
             var vm = new InquiryFormViewModel
             {

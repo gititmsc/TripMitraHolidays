@@ -1,3 +1,4 @@
+@using System.Configuration
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.MetaTitle       = ViewBag.MetaTitle ?? "About Us | Trip Mitra Holidays";
@@ -8,7 +9,7 @@
     <div class="section-header">
         <div>
             <div class="eyebrow">Our Story</div>
-            <h2 class="section-h2">About <span>Trip Mitra</span> Holidays</h2>
+            <h1 class="section-h2">About <span>Trip Mitra</span> Holidays</h1>
         </div>
     </div>
 
@@ -23,9 +24,10 @@
             planning reliable, transparent, and enjoyable for every traveller.
         </p>
         <p style="margin-bottom:32px;">
-            With over 15 years of travel industry experience and extensive on-ground knowledge across
-            India and international destinations, our team brings deep destination expertise, trusted supplier relationships,
-            and a strong understanding of what makes a journey truly memorable.
+            Since @(DateTime.Now.Year - (int)ViewBag.YearsExperience), we've built @ViewBag.YearsExperience+ years of travel industry
+            experience and extensive on-ground knowledge across India and international destinations, with our team bringing
+            deep destination expertise, trusted supplier relationships, and a strong understanding of what makes a journey
+            truly memorable.
         </p>
 
         <p style="margin-bottom:32px;">
@@ -53,22 +55,87 @@
 <div class="trust-strip" style="padding-top:0;">
     <div class="trust-item">
         <div class="trust-icon"><i class="fa-solid fa-plane"></i></div>
-        <div class="trust-num">500+</div>
+        <div class="trust-num">@ViewBag.DestinationsCount+</div>
         <div class="trust-lbl">Destinations</div>
     </div>
     <div class="trust-item">
         <div class="trust-icon"><i class="fa-solid fa-face-smile"></i></div>
-        <div class="trust-num">10,000+</div>
+        <div class="trust-num">@ViewBag.HappyTravellers</div>
         <div class="trust-lbl">Happy Travellers</div>
     </div>
     <div class="trust-item">
         <div class="trust-icon"><i class="fa-solid fa-star"></i></div>
-        <div class="trust-num">4.9 / 5</div>
+        <div class="trust-num">@ViewBag.AverageRating</div>
         <div class="trust-lbl">Average Rating</div>
     </div>
     <div class="trust-item">
         <div class="trust-icon"><i class="fa-solid fa-trophy"></i></div>
-        <div class="trust-num">15+</div>
+        <div class="trust-num">@ViewBag.YearsExperience+</div>
         <div class="trust-lbl">Years Experience</div>
     </div>
 </div>
+
+@* ── Business trust & credentials — populated from web.config AppSettings; a blank value hides that row ── *@
+@{
+    string gst        = ConfigurationManager.AppSettings["GstNumber"];
+    string regNo       = ConfigurationManager.AppSettings["BusinessRegistrationNo"];
+    string address     = ConfigurationManager.AppSettings["OfficeAddress"];
+    string mapEmbed    = ConfigurationManager.AppSettings["GoogleMapsEmbedUrl"];
+    string iata        = ConfigurationManager.AppSettings["IataNumber"];
+    string taai        = ConfigurationManager.AppSettings["TaaiNumber"];
+    bool hasCredentials = !string.IsNullOrEmpty(gst) || !string.IsNullOrEmpty(regNo)
+                        || !string.IsNullOrEmpty(address) || !string.IsNullOrEmpty(iata) || !string.IsNullOrEmpty(taai);
+}
+@if (hasCredentials)
+{
+    <section class="section" style="max-width:800px;">
+        <div class="section-header">
+            <div>
+                <div class="eyebrow">Verified Business</div>
+                <h2 class="section-h2">Our <span>Credentials</span></h2>
+            </div>
+        </div>
+        <ul style="list-style:none;padding:0;font-size:14px;color:#444;line-height:2;">
+            @if (!string.IsNullOrEmpty(regNo))
+            {
+                <li><i class="fa-solid fa-building" style="color:#c9a227;width:20px;"></i> Business Registration No.: @regNo</li>
+            }
+            @if (!string.IsNullOrEmpty(gst))
+            {
+                <li><i class="fa-solid fa-file-invoice" style="color:#c9a227;width:20px;"></i> GSTIN: @gst</li>
+            }
+            @if (!string.IsNullOrEmpty(iata))
+            {
+                <li><i class="fa-solid fa-plane-circle-check" style="color:#c9a227;width:20px;"></i> IATA No.: @iata</li>
+            }
+            @if (!string.IsNullOrEmpty(taai))
+            {
+                <li><i class="fa-solid fa-award" style="color:#c9a227;width:20px;"></i> TAAI Member No.: @taai</li>
+            }
+            @if (!string.IsNullOrEmpty(address))
+            {
+                <li><i class="fa-solid fa-location-dot" style="color:#c9a227;width:20px;"></i> @address</li>
+            }
+        </ul>
+        @if (!string.IsNullOrEmpty(mapEmbed))
+        {
+            <div style="margin-top:16px;border-radius:12px;overflow:hidden;">
+                <iframe src="@mapEmbed" width="100%" height="300" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Trip Mitra Holidays office location"></iframe>
+            </div>
+        }
+    </section>
+}
+
+@section structuredData
+{
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@@type": "ListItem", "position": 1, "name": "Home", "item": "@(Url.Action("Index", "Home", null, Request.Url.Scheme))" },
+            { "@@type": "ListItem", "position": 2, "name": "About Us", "item": "@(Url.RouteUrl("About", null, Request.Url.Scheme))" }
+        ]
+    }
+    </script>
+}

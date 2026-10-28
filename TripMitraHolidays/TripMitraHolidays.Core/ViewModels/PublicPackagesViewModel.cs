@@ -14,6 +14,8 @@ namespace TripMitraHolidays.Core.ViewModels
 
         public string MetaTitle { get; set; }
         public string MetaDescription { get; set; }
+        public string IntroHeading { get; set; }
+        public string IntroText { get; set; }
 
         public int TotalPages => PageSize > 0 ? (int)Math.Ceiling((double)TotalCount / PageSize) : 1;
         public bool HasPrev => Page > 1;

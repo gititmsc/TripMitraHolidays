@@ -1,3 +1,4 @@
+@using System.Configuration
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,33 @@
 
     @* ── SEO: Title ── *@
     <title>@(ViewBag.MetaTitle ?? "Trip Mitra Holidays – Explore More, Worry Less")</title>
+
+    @* ── Search-engine ownership verification ── *@
+    @{
+        string googleVerify = ConfigurationManager.AppSettings["GoogleSiteVerification"];
+        string bingVerify   = ConfigurationManager.AppSettings["BingSiteVerification"];
+    }
+    @if (!string.IsNullOrEmpty(googleVerify))
+    {
+        <meta name="google-site-verification" content="@googleVerify" />
+    }
+    @if (!string.IsNullOrEmpty(bingVerify))
+    {
+        <meta name="msvalidate.01" content="@bingVerify" />
+    }
+
+    @* ── Google Analytics 4 — set GoogleAnalyticsId in web.config to enable ── *@
+    @{ string gaId = ConfigurationManager.AppSettings["GoogleAnalyticsId"]; }
+    @if (!string.IsNullOrEmpty(gaId))
+    {
+        <script async src="https://www.googletagmanager.com/gtag/js?id=@gaId"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '@gaId');
+        </script>
+    }
 
     @* ── SEO: Meta tags ── *@
     @if (!string.IsNullOrEmpty(ViewBag.MetaDescription as string))
@@ -55,6 +83,55 @@
     @* ── Trip Mitra CSS ── *@
     @Styles.Render("~/Content/tripmitra")
     <script src="~/Scripts/fontawesome.js" crossorigin="anonymous"></script>
+
+    @* ── SEO: TravelAgency / LocalBusiness structured data — sitewide, one source of truth ── *@
+    @{
+        string siteDomain = ConfigurationManager.AppSettings["CanonicalDomain"];
+        if (string.IsNullOrEmpty(siteDomain)) siteDomain = Request.Url?.Authority ?? "www.tripmitraholidays.com";
+        string siteUrl  = "https://" + siteDomain + "/";
+        string siteLogo = "https://" + siteDomain + "/Content/images/logo.png";
+
+        var socialLinks = new[]
+        {
+            ConfigurationManager.AppSettings["SocialFacebookUrl"],
+            ConfigurationManager.AppSettings["SocialInstagramUrl"],
+            ConfigurationManager.AppSettings["SocialTwitterUrl"],
+            ConfigurationManager.AppSettings["SocialYoutubeUrl"]
+        }.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+        string officeAddress = ConfigurationManager.AppSettings["OfficeAddress"];
+
+        var orgSchemaObj = new Dictionary<string, object>();
+        orgSchemaObj.Add("context", "https://schema.org");
+        orgSchemaObj.Add("type", "TravelAgency");
+        orgSchemaObj.Add("name", "Trip Mitra Holidays");
+        orgSchemaObj.Add("url", siteUrl);
+        orgSchemaObj.Add("logo", siteLogo);
+        orgSchemaObj.Add("image", siteLogo);
+        orgSchemaObj.Add("description", "Trip Mitra Holidays offers handpicked domestic and international holiday packages with expert planning and 24/7 support.");
+        orgSchemaObj.Add("telephone", ConfigurationManager.AppSettings["CompanyPhoneE164"]);
+        orgSchemaObj.Add("email", ConfigurationManager.AppSettings["CompanyEmail"]);
+        if (!string.IsNullOrEmpty(officeAddress))
+        {
+            var addressObj = new Dictionary<string, object>();
+            addressObj.Add("type", "PostalAddress");
+            addressObj.Add("streetAddress", officeAddress);
+            addressObj.Add("addressCountry", "IN");
+            orgSchemaObj.Add("address", addressObj);
+        }
+        if (socialLinks.Any())
+        {
+            orgSchemaObj.Add("sameAs", socialLinks);
+        }
+
+        string orgSchemaJson = System.Web.Helpers.Json.Encode(orgSchemaObj)
+            .Replace("\"context\"", "\"@context\"")
+            .Replace("\"type\"", "\"@type\"");
+    }
+    <script type="application/ld+json">
+        @Html.Raw(orgSchemaJson)
+    </script>
+    @RenderSection("structuredData", required: false)
 </head>
 <body>
 

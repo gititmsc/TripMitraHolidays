@@ -124,4 +124,26 @@
         });
     });
 
+
+    /* ── GA4 CONVERSION TRACKING: call clicks & WhatsApp clicks ──
+       No-ops silently if GA isn't configured (window.gtag undefined). */
+    function trackEvent(name, params) {
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', name, params || {});
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link) return;
+
+        var href = link.getAttribute('href');
+
+        if (href.indexOf('tel:') === 0) {
+            trackEvent('call_click', { phone_number: href.replace('tel:', '') });
+        } else if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp') !== -1) {
+            trackEvent('whatsapp_click', { link_url: href });
+        }
+    });
+
 })();

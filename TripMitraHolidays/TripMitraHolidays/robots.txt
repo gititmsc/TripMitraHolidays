@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+Disallow: /Account/
+Disallow: /enquire?*
+
+# AI crawlers — explicitly allowed so this site can be cited in AI search
+# answers (ChatGPT/OpenAI, Google AI Overviews, Perplexity, Claude).
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+Sitemap: https://www.tripmitraholidays.com/sitemap.xml
