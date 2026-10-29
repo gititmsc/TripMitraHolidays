@@ -31,9 +31,9 @@ body {
     align-items: center;
     justify-content: space-between;
     font-size: 12px;
-    color: #8899cc;
+    color: white;
 }
-.topbar a { color: #8899cc; text-decoration: none; transition: color .2s; }
+.topbar a { color: white; text-decoration: none; transition: color .2s; }
 .topbar a:hover { color: #c9a227; }
 .topbar-left { display: flex; gap: 20px; align-items: center; }
 .topbar-right { display: flex; gap: 18px; }
@@ -596,7 +596,7 @@ body {
 .footer-brand .logo-name { color: #fff; }
 .footer-brand .logo-name span { color: #c9a227; }
 .footer-brand .logo-sub { color: #3a4f7a; }
-.footer-tagline { font-size: 12px; color: #4a5f8a; line-height: 1.8; margin: 14px 0 18px; }
+.footer-tagline { font-size: 12px; color: white; line-height: 1.8; margin: 14px 0 18px; }
 .footer-socials { display: flex; gap: 10px; }
 .soc-btn {
     width: 34px; height: 34px; border-radius: 50%;
@@ -612,20 +612,24 @@ body {
     letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px;
 }
 .footer-links { display: flex; flex-direction: column; gap: 10px; }
-.footer-links a { font-size: 12px; color: #4a5f8a; text-decoration: none; transition: color .2s; }
+.footer-links a { font-size: 12px; color: white; text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: #c9a227; }
 .footer-contact { display: flex; flex-direction: column; gap: 12px; }
 .footer-contact-item { display: flex; gap: 10px; align-items: flex-start; }
-.footer-contact-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-.footer-contact-text { font-size: 12px; color: #4a5f8a; line-height: 1.5; }
+.footer-contact-icon {
+    font-size: 14px; flex-shrink: 0;
+    width: 16px; height: 16px; margin-top: 1px;
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.footer-contact-text { font-size: 12px; color: white; line-height: 1.5; }
 .footer-bottom {
     border-top: 1px solid rgba(255,255,255,.07); padding-top: 18px;
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px; flex-wrap: wrap;
 }
-.footer-bottom p { font-size: 11px; color: #2a3a5a; }
+.footer-bottom p { font-size: 11px; color: white; }
 .footer-bottom-links { display: flex; gap: 20px; }
-.footer-bottom-links a { font-size: 11px; color: #2a3a5a; text-decoration: none; }
+.footer-bottom-links a { font-size: 11px; color: white; text-decoration: none; }
 .footer-bottom-links a:hover { color: #c9a227; }
 
 /* ── WhatsApp Float ── */

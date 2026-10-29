@@ -87,7 +87,9 @@
     @* ── SEO: TravelAgency / LocalBusiness structured data — sitewide, one source of truth ── *@
     @{
         string siteDomain = ConfigurationManager.AppSettings["CanonicalDomain"];
-        if (string.IsNullOrEmpty(siteDomain)) siteDomain = Request.Url?.Authority ?? "www.tripmitraholidays.com";
+        if (string.IsNullOrEmpty(siteDomain))
+        { siteDomain = Request.Url?.Authority ?? "www.tripmitraholidays.com"; }
+
         string siteUrl  = "https://" + siteDomain + "/";
         string siteLogo = "https://" + siteDomain + "/Content/images/logo.png";
 
