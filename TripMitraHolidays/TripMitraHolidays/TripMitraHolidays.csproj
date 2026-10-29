@@ -190,9 +190,13 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\PrivacyPolicy.cshtml" />
+    <Content Include="Views\Home\Terms.cshtml" />
+    <Content Include="Views\Home\CancellationPolicy.cshtml" />
     <Content Include="Views\Inquiry\Index.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
     <Content Include="Views\Packages\Detail.cshtml" />
+    <Content Include="Views\Packages\ByCityDestination.cshtml" />
     <Content Include="Views\Shared\_Topbar.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
